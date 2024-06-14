@@ -1,0 +1,163 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f5f5f5;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 10px 10px 0px 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.form-container h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.form-group input {
+    max-width: 200px;
+}
+
+#submit-button {
+    margin-bottom: 13px;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.playlist-link {
+    margin-left: 33px;
+}
+
+.counter-container {
+    position: absolute;
+    top: 13px;
+    right: 20px;
+}
+
+#submit-button {
+    margin-bottom: 13px;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    align-self: flex-end;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.search-container {
+    margin-bottom: 20px;
+    position: absolute;
+    left: 20px;
+    top: 13px;
+}
+
+#playlists {
+    margin-top: 0px;
+}
+
+#video_number {
+    max-width: 50px;
+}
+
+.playlist {
+    margin: 3px 0;
+    background-color: #fff;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.playlist h2 {
+    margin: 0px 0px 0px 43px;
+    font-size: 16px;
+}
+
+.playlist p {
+    margin: 5px 0px 5px 5px;
+}
+
+.editable-input {
+    width: 50px;
+    padding: 0px 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 0px;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 1px;
+    left: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    font-size: 9px;
+    text-align: center;
+    padding: 0;
+    margin-top: 6px;
+}
+
+.delete-btn:hover {
+    background-color: darkred;
+}
+
+@media (max-width: 1000px) {
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        max-width: 100%;
+        margin-right: 30px;
+    }
+
+    .form-group input {
+        max-width: 100%;
+    }
+}

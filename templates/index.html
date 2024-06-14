@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>YouTube Playlists</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    </head>
+    <body>
+        <h1>My YouTube Playlists</h1>
+
+        <div class="form-container">
+            <form id="addPlaylistForm">
+                <div class="form-group">
+                    <label for="game">Game:</label>
+                    <input type="text" id="game" name="game" required />
+                </div>
+                <div class="form-group">
+                    <label for="video_number">Video Number:</label>
+                    <input type="number" id="video_number" name="video_number" value="1" required />
+                </div>
+                <div class="form-group">
+                    <label for="youtuber">YouTuber:</label>
+                    <input type="text" id="youtuber" name="youtuber" required />
+                </div>
+                <div class="form-group">
+                    <label for="link">Playlist Link:</label>
+                    <input type="url" id="link" name="link" required />
+                </div>
+                <button id="submit-button" type="submit">Add Playlist</button>
+            </form>
+        </div>
+
+        <div class="search-container">
+            <label for="search">Search:</label>
+            <input type="text" id="search" name="search" placeholder="Search playlists..." />
+        </div>
+
+        <div class="counter-container">
+            <p>Total Playlists: <span id="total-playlists"></span></p>
+        </div>
+
+        <div id="playlists"></div>
+
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    </body>
+</html>
