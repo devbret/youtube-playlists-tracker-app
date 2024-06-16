@@ -1,4 +1,4 @@
-# YouTube Playlist App
+# YouTube Playlists App
 
 ![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-app-screenshot-updated.png)
 
