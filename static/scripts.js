@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     let playlists = [];
+    let currentFilter = '';
+    const colorMap = {};
 
     fetch('/api/playlists')
         .then((response) => response.json())
         .then((data) => {
             playlists = data.playlists;
+            assignColors(playlists);
             displayPlaylists(playlists);
             addEventListeners();
             updatePlaylistCount();
@@ -32,7 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((data) => {
                 if (data.success) {
                     playlists.push(newPlaylist);
-                    displayPlaylists(playlists);
+                    playlists.sort((a, b) => {
+                        if (a.game.localeCompare(b.game) === 0) {
+                            return a.youtuber.localeCompare(b.youtuber);
+                        }
+                        return a.game.localeCompare(b.game);
+                    });
+                    assignColors(playlists);
+                    displayPlaylists(playlists, currentFilter);
                     addEventListeners();
                     clearForm();
                     updatePlaylistCount();
@@ -43,42 +53,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('search').addEventListener('input', (event) => {
         const query = event.target.value.toLowerCase();
-        const playlistDivs = document.querySelectorAll('.playlist');
+        currentFilter = query;
+        displayPlaylists(playlists, currentFilter);
+    });
+
+    function assignColors(playlists) {
+        const uniqueGames = [...new Set(playlists.map((playlist) => playlist.game))];
+        shuffleArray(uniqueGames);
+        uniqueGames.forEach((game, index) => {
+            colorMap[game] = `hsl(${(index * 360) / uniqueGames.length}, 70%, 70%)`;
+        });
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function displayPlaylists(playlists, filter = '') {
+        const playlistsDiv = document.getElementById('playlists');
+        playlistsDiv.innerHTML = '';
         let visibleCount = 0;
 
-        playlistDivs.forEach((div) => {
-            const gameText = div.querySelector('p a').textContent.toLowerCase();
-            const youtuberText = div.querySelector('p:nth-child(4)').textContent.toLowerCase();
-            if (gameText.includes(query) || youtuberText.includes(query)) {
-                div.style.display = 'flex';
+        playlists.forEach((playlist, index) => {
+            if (playlist.game.toLowerCase().includes(filter) || playlist.youtuber.toLowerCase().includes(filter)) {
+                const playlistDiv = document.createElement('div');
+                playlistDiv.className = 'playlist';
+                const gameColor = colorMap[playlist.game];
+                playlistDiv.innerHTML = `
+                    <button class="delete-btn" data-index="${index}">X</button>
+                    <p><a href="${playlist.link}" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">${playlist.game}</a></p>
+                    <p> - #<span class="video-number" data-index="${index}">${playlist.video_number}</span></p>
+                    <p> (${playlist.youtuber})</p>
+                `;
+                playlistsDiv.appendChild(playlistDiv);
                 visibleCount++;
-            } else {
-                div.style.display = 'none';
             }
         });
 
         document.getElementById('total-playlists').textContent = visibleCount;
-    });
-
-    function displayPlaylists(playlists) {
-        const playlistsDiv = document.getElementById('playlists');
-        playlistsDiv.innerHTML = '';
-        playlists.forEach((playlist, index) => {
-            const playlistDiv = document.createElement('div');
-            playlistDiv.className = 'playlist';
-            playlistDiv.innerHTML = `
-                <button class="delete-btn" data-index="${index}">X</button>
-                <p><a href="${playlist.link}" target="_blank" class="playlist-link">${playlist.game}</a></p>
-                <p> - #<span class="video-number" data-index="${index}">${playlist.video_number}</span></p>
-                <p> (${playlist.youtuber})</p>
-            `;
-            playlistsDiv.appendChild(playlistDiv);
-        });
-
-        updatePlaylistCount();
+        addEventListeners();
     }
 
     function addEventListeners() {
+        document.querySelectorAll('.playlist-link').forEach((link) => {
+            link.addEventListener('mouseover', (event) => {
+                event.target.style.color = 'black';
+            });
+            link.addEventListener('mouseout', (event) => {
+                const game = event.target.textContent;
+                event.target.style.color = colorMap[game];
+            });
+        });
+
         document.querySelectorAll('.video-number').forEach((element) => {
             element.addEventListener('click', (event) => {
                 const index = event.target.getAttribute('data-index');
