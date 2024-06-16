@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     let playlists = [];
     let currentFilter = '';
+    let debounceTimer;
     const colorMap = {};
 
     fetch('/api/playlists')
@@ -52,9 +53,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('search').addEventListener('input', (event) => {
-        const query = event.target.value.toLowerCase();
-        currentFilter = query;
-        displayPlaylists(playlists, currentFilter);
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(async () => {
+            const query = event.target.value.toLowerCase();
+            currentFilter = query;
+            try {
+                await fetch('/api/search_log', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ search_term: query }),
+                });
+
+                const response = await fetch('/api/playlists');
+                const data = await response.json();
+                playlists = data.playlists;
+                addEventListeners();
+                updatePlaylistCount();
+                displayPlaylists(playlists, currentFilter);
+            } catch (error) {
+                console.error('Error fetching playlists:', error);
+            }
+        }, 230);
     });
 
     function assignColors(playlists) {

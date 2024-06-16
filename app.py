@@ -52,6 +52,13 @@ def index():
     logging.info('Accessed home page.')
     return render_template('index.html')
 
+@app.route('/api/search_log', methods=['POST'])
+def log_search():
+    search_data = request.json
+    search_term = search_data.get('search_term', '')
+    logging.info(f"Search term used: {search_term}")
+    return jsonify({"success": True}), 200
+
 @app.route('/api/playlists', methods=['GET', 'POST'])
 def playlists():
     if request.method == 'GET':
