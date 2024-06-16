@@ -110,23 +110,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('.video-number').forEach((element) => {
             element.addEventListener('click', (event) => {
-                const index = event.target.getAttribute('data-index');
-                const currentNumber = event.target.textContent;
+                event.stopPropagation();
+                const target = event.target;
+                console.log('Clicked on:', target);
+
+                if (target.nextSibling && target.nextSibling.className === 'editable-input') {
+                    console.log('Input already exists, focus on it');
+                    target.nextSibling.focus();
+                    return;
+                }
+
+                const index = target.getAttribute('data-index');
+                const currentNumber = target.textContent;
+
+                console.log('Current index:', index);
+                console.log('Current number:', currentNumber);
+
                 const input = document.createElement('input');
                 input.type = 'number';
                 input.value = currentNumber;
                 input.step = 0.1;
                 input.className = 'editable-input';
+
+                target.style.display = 'none';
+
                 input.addEventListener('blur', () => {
                     const newVideoNumber = input.value || 1;
                     updateVideoNumber(index, newVideoNumber);
-                    event.target.textContent = newVideoNumber;
-                    event.target.style.display = 'inline';
+                    target.textContent = newVideoNumber;
+
+                    target.style.display = 'inline';
                     input.remove();
+
+                    console.log('Input blurred, new video number:', newVideoNumber);
                 });
-                event.target.style.display = 'none';
-                event.target.parentNode.insertBefore(input, event.target.nextSibling);
+
+                target.parentNode.insertBefore(input, target.nextSibling);
                 input.focus();
+
+                console.log('Input element created and focused:', input);
             });
         });
 
@@ -140,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function clearForm() {
         document.getElementById('game').value = '';
+        document.getElementById('game').focus();
         document.getElementById('video_number').value = 1;
         document.getElementById('youtuber').value = '';
         document.getElementById('link').value = '';
