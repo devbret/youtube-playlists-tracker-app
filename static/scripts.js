@@ -98,20 +98,80 @@ document.addEventListener('DOMContentLoaded', () => {
         playlistsDiv.innerHTML = '';
         let visibleCount = 0;
 
+        const gameMap = {};
+
         playlists.forEach((playlist, index) => {
             if (playlist.game.toLowerCase().includes(filter) || playlist.youtuber.toLowerCase().includes(filter)) {
+                if (!gameMap[playlist.game]) {
+                    gameMap[playlist.game] = [];
+                }
+                gameMap[playlist.game].push({ ...playlist, index });
+            }
+        });
+
+        Object.keys(gameMap).forEach((game) => {
+            const gameDiv = document.createElement('div');
+            gameDiv.className = 'game-group';
+            const gameColor = colorMap[game];
+            gameDiv.innerHTML = `<h2 style="color: ${gameColor}; text-shadow: 1px 1px black;">${game}</h2>`;
+
+            gameMap[game].forEach((playlist) => {
                 const playlistDiv = document.createElement('div');
                 playlistDiv.className = 'playlist';
-                const gameColor = colorMap[playlist.game];
                 playlistDiv.innerHTML = `
-                    <button class="delete-btn" data-index="${index}">X</button>
-                    <p><a href="${playlist.link}" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">${playlist.game}</a></p>
-                    <p> - #<span class="video-number" data-index="${index}">${playlist.video_number}</span></p>
-                    <p> (${playlist.youtuber})</p>
+                    <button class="delete-btn" data-index="${playlist.index}">X</button>
+                    <p><a href="${playlist.link}" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">${playlist.youtuber}</a></p>
+                    <p> - #<span class="video-number" data-index="${playlist.index}">${playlist.video_number}</span></p>
                 `;
-                playlistsDiv.appendChild(playlistDiv);
+                gameDiv.appendChild(playlistDiv);
                 visibleCount++;
+            });
+
+            playlistsDiv.appendChild(gameDiv);
+        });
+
+        document.getElementById('total-playlists').textContent = visibleCount;
+        addEventListeners();
+    }
+    function displayPlaylists(playlists, filter = '') {
+        const playlistsDiv = document.getElementById('playlists');
+        playlistsDiv.innerHTML = '';
+        let visibleCount = 0;
+
+        const gameMap = {};
+
+        playlists.forEach((playlist, index) => {
+            if (playlist.game.toLowerCase().includes(filter) || playlist.youtuber.toLowerCase().includes(filter)) {
+                if (!gameMap[playlist.game]) {
+                    gameMap[playlist.game] = [];
+                }
+                gameMap[playlist.game].push({ ...playlist, index });
             }
+        });
+
+        Object.keys(gameMap).forEach((game) => {
+            const gameDiv = document.createElement('div');
+            gameDiv.className = 'game-group';
+            const gameColor = colorMap[game];
+            gameDiv.innerHTML = `<h2 style="color: ${gameColor}; text-shadow: 1px 1px black;">${game}</h2>`;
+
+            const playlistsInnerDiv = document.createElement('div');
+            playlistsInnerDiv.classList.add('playlists-inner-div');
+            gameDiv.appendChild(playlistsInnerDiv);
+
+            gameMap[game].forEach((playlist) => {
+                const playlistDiv = document.createElement('div');
+                playlistDiv.className = 'playlist';
+                playlistDiv.innerHTML = `
+                    <button class="delete-btn" data-index="${playlist.index}">X</button>
+                    <p><a href="${playlist.link}" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">${playlist.youtuber}</a></p>
+                    <p> - #<span class="video-number" data-index="${playlist.index}">${playlist.video_number}</span></p>
+                `;
+                playlistsInnerDiv.appendChild(playlistDiv);
+                visibleCount++;
+            });
+
+            playlistsDiv.appendChild(gameDiv);
         });
 
         document.getElementById('total-playlists').textContent = visibleCount;
@@ -124,8 +184,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.target.style.color = 'black';
             });
             link.addEventListener('mouseout', (event) => {
-                const game = event.target.textContent;
-                event.target.style.color = colorMap[game];
+                const gameGroup = event.target.closest('.game-group');
+                if (gameGroup) {
+                    const parentContainer = gameGroup.closest('div');
+                    if (parentContainer) {
+                        const h2Element = parentContainer.querySelector('h2');
+                        if (h2Element) {
+                            const game = h2Element.innerText;
+                            if (colorMap[game]) {
+                                event.target.style.color = colorMap[game];
+                            }
+                        }
+                    }
+                }
             });
         });
 
@@ -238,3 +309,10 @@ function updateIndices() {
         playlistDiv.querySelector('.video-number').setAttribute('data-index', index);
     });
 }
+
+document.getElementById('scrollToTop').addEventListener('click', function () {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+    });
+});

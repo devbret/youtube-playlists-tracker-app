@@ -1,25 +1,46 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0px auto 20px auto;
     background-color: #f5f5f5;
+    max-width: 1100px;
+    position: relative;
+}
+
+header {
+    position: sticky;
+    top: 0px;
+    z-index: 10000;
+    background-color: white;
+    margin: 0px;
+    padding: 10px 5px 0px 5px;
 }
 
 h1 {
     text-align: center;
     color: #333;
+    margin-top: 0px;
+}
+
+h2 {
+    margin: 0px;
 }
 
 .form-container {
     background-color: #fff;
     padding: 10px 10px 0px 10px;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
 }
 
-.form-container h2 {
-    margin-top: 0;
-    color: #333;
+.game-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+    flex-direction: column;
+}
+
+.playlists-inner-div {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 form {
@@ -56,8 +77,8 @@ label {
 
 .counter-container {
     position: absolute;
-    top: 13px;
-    right: 20px;
+    top: 10px;
+    right: 15px;
 }
 
 #submit-button {
@@ -90,12 +111,21 @@ button:hover {
 .search-container {
     margin-bottom: 20px;
     position: absolute;
-    left: 20px;
-    top: 13px;
+    left: 15px;
+    top: 20px;
+}
+
+#search {
+    max-width: 200px;
+}
+
+.playlist {
+    display: flex;
 }
 
 #playlists {
-    margin-top: 0px;
+    margin-top: 10px;
+    padding: 0px 15px;
 }
 
 #video_number {
@@ -116,7 +146,7 @@ button:hover {
 }
 
 .playlist p {
-    margin: 5px 0px 5px 5px;
+    margin: 5px 0px 0px 5px;
 }
 
 .editable-input {
@@ -131,7 +161,7 @@ button:hover {
     position: absolute;
     top: 3px;
     left: 10px;
-    background-color: red;
+    background-color: lightgray;
     color: white;
     border: none;
     border-radius: 50%;
@@ -141,20 +171,33 @@ button:hover {
     font-size: 9px;
     text-align: center;
     padding: 0;
-    margin-top: 6px;
+    margin-top: 4px;
+    margin-left: 7px;
 }
 
 .delete-btn:hover {
-    background-color: darkred;
+    background-color: red;
 }
 
-@media (max-width: 1000px) {
+#scrollToTop {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 5px 10px;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+@media (max-width: 1100px) {
     .form-group {
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
         max-width: 100%;
-        margin-right: 30px;
+        margin-right: 25px;
     }
 
     .form-group input {
