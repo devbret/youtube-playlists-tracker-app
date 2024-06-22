@@ -112,48 +112,20 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(gameMap).forEach((game) => {
             const gameDiv = document.createElement('div');
             gameDiv.className = 'game-group';
+            const gameDivHeaderDiv = document.createElement('div');
+            gameDivHeaderDiv.classList.add('game-group-header-div');
+            gameDiv.appendChild(gameDivHeaderDiv);
             const gameColor = colorMap[game];
-            gameDiv.innerHTML = `<h2 style="color: ${gameColor}; text-shadow: 1px 1px black;">${game}</h2>`;
-
-            gameMap[game].forEach((playlist) => {
-                const playlistDiv = document.createElement('div');
-                playlistDiv.className = 'playlist';
-                playlistDiv.innerHTML = `
-                    <button class="delete-btn" data-index="${playlist.index}">X</button>
-                    <p><a href="${playlist.link}" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">${playlist.youtuber}</a></p>
-                    <p> - #<span class="video-number" data-index="${playlist.index}">${playlist.video_number}</span></p>
-                `;
-                gameDiv.appendChild(playlistDiv);
-                visibleCount++;
-            });
-
-            playlistsDiv.appendChild(gameDiv);
-        });
-
-        document.getElementById('total-playlists').textContent = visibleCount;
-        addEventListeners();
-    }
-    function displayPlaylists(playlists, filter = '') {
-        const playlistsDiv = document.getElementById('playlists');
-        playlistsDiv.innerHTML = '';
-        let visibleCount = 0;
-
-        const gameMap = {};
-
-        playlists.forEach((playlist, index) => {
-            if (playlist.game.toLowerCase().includes(filter) || playlist.youtuber.toLowerCase().includes(filter)) {
-                if (!gameMap[playlist.game]) {
-                    gameMap[playlist.game] = [];
-                }
-                gameMap[playlist.game].push({ ...playlist, index });
-            }
-        });
-
-        Object.keys(gameMap).forEach((game) => {
-            const gameDiv = document.createElement('div');
-            gameDiv.className = 'game-group';
-            const gameColor = colorMap[game];
-            gameDiv.innerHTML = `<h2 style="color: ${gameColor}; text-shadow: 1px 1px black;">${game}</h2>`;
+            gameDivHeaderDiv.innerHTML = `<h2 style="color: ${gameColor}; text-shadow: 1px 1px black;">${game}</h2>`;
+            const openAllButton = document.createElement('button');
+            openAllButton.textContent = 'Open All Playlists';
+            openAllButton.classList.add('open-all-button');
+            openAllButton.onclick = () => {
+                gameMap[game].forEach((playlist) => {
+                    window.open(playlist.link, '_blank');
+                });
+            };
+            gameDivHeaderDiv.appendChild(openAllButton);
 
             const playlistsInnerDiv = document.createElement('div');
             playlistsInnerDiv.classList.add('playlists-inner-div');
@@ -204,19 +176,14 @@ document.addEventListener('DOMContentLoaded', () => {
             element.addEventListener('click', (event) => {
                 event.stopPropagation();
                 const target = event.target;
-                console.log('Clicked on:', target);
 
                 if (target.nextSibling && target.nextSibling.className === 'editable-input') {
-                    console.log('Input already exists, focus on it');
                     target.nextSibling.focus();
                     return;
                 }
 
                 const index = target.getAttribute('data-index');
                 const currentNumber = target.textContent;
-
-                console.log('Current index:', index);
-                console.log('Current number:', currentNumber);
 
                 const input = document.createElement('input');
                 input.type = 'number';
@@ -233,14 +200,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     target.style.display = 'inline';
                     input.remove();
-
-                    console.log('Input blurred, new video number:', newVideoNumber);
                 });
 
                 target.parentNode.insertBefore(input, target.nextSibling);
                 input.focus();
-
-                console.log('Input element created and focused:', input);
             });
         });
 

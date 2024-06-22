@@ -1,6 +1,6 @@
-# YouTube Playlists App
+# YouTube Playlists Tracker App
 
-![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/images/i/bernhoftbret/screenshot-of-new-yt-playlist-app-ui.png)
+![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-screenshot-ui.png)
 
 Catalog your viewing progress with specific YouTube playlists using this app.
 
@@ -24,4 +24,8 @@ Catalog your viewing progress with specific YouTube playlists using this app.
 
 ## Logging Features
 
-You will notice that while using the app, each basic interaction is logged in a file named `app_log.csv`. The purpose of this file is to power numerous data analysis tools soon to be released, that help users of the YouTube Playlists App discover their personal viewing habits.
+You will notice that while using the app, each basic interaction is logged in a file named `app_log.csv`. The purpose of this file is to power numerous data analysis tools soon to be released, that help users of the YouTube Playlists Tracker App discover their personal viewing habits.
+
+## Other Thoughts
+
+The intended use case for this program is collecting and tracking viewing progress among video game playthroughs on YouTube. Which are almost always organized as playlists. But one could feasibly use this application to curate any variety of links.
