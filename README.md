@@ -15,8 +15,8 @@ Catalog your viewing progress with specific YouTube playlists using this app.
 
 1. Install the above programs.
 2. Open a shell window (For Windows open PowerShell, for MacOS open Terminal & for Linux open your distro's terminal emulator).
-3. Clone this repository using `git` by running the following command; `git clone https://github.com/devbret/youtube-playlists-app`.
-4. Navigate to the repo's directory by running; `cd youtube-playlists-app`.
+3. Clone this repository using `git` by running the following command; `git clone https://github.com/devbret/youtube-playlists-tracker-app`.
+4. Navigate to the repo's directory by running; `cd youtube-playlists-tracker-app`.
 5. Install the needed dependencies for running the script by running; `pip install -r requirements.txt`.
 6. Run the script with the command `python3 app.py`. After the Flask server has started, visit [this link](http://127.0.0.1:5000/) in a browser, and you will be brought to the live application.
 7. Enter details for a favorite playlist into the four fields at the top of the program, and press the "Add Playlist" button. This can be repeated any number of times.
