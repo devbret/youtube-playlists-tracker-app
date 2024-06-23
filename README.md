@@ -28,4 +28,4 @@ You will notice that while using the app, each basic interaction is logged in a 
 
 ## Other Thoughts
 
-The intended use case for this program is collecting and tracking viewing progress among video game playthroughs on YouTube. Which are almost always organized as playlists. But one could feasibly use this application to curate any variety of links.
+The intended use of this program is collecting and tracking the user's viewing progress with video game playthroughs on YouTube. Which are almost always organized as linkable playlists. But one could feasibly use this application to curate any variety of hyperlinked resources.

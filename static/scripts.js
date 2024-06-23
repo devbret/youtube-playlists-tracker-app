@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
             playlists = data.playlists;
             assignColors(playlists);
             displayPlaylists(playlists);
-            addEventListeners();
             updatePlaylistCount();
         })
         .catch((error) => console.error('Error fetching playlists:', error));
@@ -35,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
+                    newPlaylist.index = data.index; // Assuming the API returns the index of the new playlist
                     playlists.push(newPlaylist);
                     playlists.sort((a, b) => {
                         if (a.game.localeCompare(b.game) === 0) {
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     assignColors(playlists);
                     displayPlaylists(playlists, currentFilter);
-                    addEventListeners();
                     clearForm();
                     updatePlaylistCount();
                 }
@@ -54,27 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('search').addEventListener('input', (event) => {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(async () => {
-            const query = event.target.value.toLowerCase();
-            currentFilter = query;
-            try {
-                await fetch('/api/search_log', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ search_term: query }),
-                });
-
-                const response = await fetch('/api/playlists');
-                const data = await response.json();
-                playlists = data.playlists;
-                addEventListeners();
-                updatePlaylistCount();
-                displayPlaylists(playlists, currentFilter);
-            } catch (error) {
-                console.error('Error fetching playlists:', error);
-            }
+        debounceTimer = setTimeout(() => {
+            currentFilter = event.target.value.toLowerCase();
+            displayPlaylists(playlists, currentFilter);
         }, 230);
     });
 
@@ -117,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameDiv.appendChild(gameDivHeaderDiv);
             const gameColor = colorMap[game];
             gameDivHeaderDiv.innerHTML = `<h2 style="color: ${gameColor}; text-shadow: 1px 1px black;">${game}</h2>`;
+
             const openAllButton = document.createElement('button');
             openAllButton.textContent = 'Open All Playlists';
             openAllButton.classList.add('open-all-button');
@@ -126,6 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             };
             gameDivHeaderDiv.appendChild(openAllButton);
+
+            const deleteAllButton = document.createElement('button');
+            deleteAllButton.textContent = 'Delete All Playlists';
+            deleteAllButton.classList.add('delete-all-button');
+            deleteAllButton.onclick = () => deleteAllPlaylists(game, gameMap[game], gameDiv);
+            gameDivHeaderDiv.appendChild(deleteAllButton);
 
             const playlistsInnerDiv = document.createElement('div');
             playlistsInnerDiv.classList.add('playlists-inner-div');
@@ -150,7 +138,44 @@ document.addEventListener('DOMContentLoaded', () => {
         addEventListeners();
     }
 
+    function deleteAllPlaylists(game, playlistsSubmitted, gameDiv) {
+        const deletePromises = playlistsSubmitted.map((playlist) => {
+            return fetch(`/api/playlists/${playlist.index}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+        });
+
+        Promise.all(deletePromises)
+            .then((responses) => {
+                return Promise.all(responses.map((response) => response.json()));
+            })
+            .then((results) => {
+                const success = results.every((result) => result.success);
+                if (success) {
+                    playlists = playlists.filter((playlist) => playlist.game !== game);
+                    console.log(playlists);
+                    gameDiv.remove();
+                    updateIndices();
+                    updatePlaylistCount();
+                } else {
+                    console.error('Error deleting some playlists:', results);
+                }
+            })
+            .catch((error) => console.error('Error deleting playlists:', error));
+    }
+
     function addEventListeners() {
+        document.querySelectorAll('.delete-btn').forEach((button) => {
+            button.addEventListener('click', (event) => {
+                const index = event.target.getAttribute('data-index');
+                const playlistDiv = event.target.closest('.playlist');
+                deletePlaylist(index, playlistDiv);
+            });
+        });
+
         document.querySelectorAll('.playlist-link').forEach((link) => {
             link.addEventListener('mouseover', (event) => {
                 event.target.style.color = 'black';
@@ -206,13 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.focus();
             });
         });
-
-        document.querySelectorAll('.delete-btn').forEach((button) => {
-            button.addEventListener('click', (event) => {
-                const index = event.target.getAttribute('data-index');
-                deletePlaylist(index, event.target.parentNode);
-            });
-        });
     }
 
     function clearForm() {
@@ -257,6 +275,7 @@ function deletePlaylist(index, element) {
         .then((data) => {
             if (data.success) {
                 element.remove();
+                playlists = playlists.filter((playlist, idx) => idx !== parseInt(index));
                 updateIndices();
                 updatePlaylistCount();
             } else {

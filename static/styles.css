@@ -191,7 +191,8 @@ button:hover {
     border-radius: 5px;
 }
 
-.open-all-button {
+.open-all-button,
+.delete-all-button {
     margin-left: 15px;
     margin-bottom: 2px;
     padding: 5px 10px;
@@ -199,7 +200,8 @@ button:hover {
     font-size: 10px;
 }
 
-.open-all-button:hover {
+.open-all-button:hover,
+.delete-all-button:hover {
     background-color: darkgray;
 }
 
