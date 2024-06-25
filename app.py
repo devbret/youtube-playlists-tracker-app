@@ -101,5 +101,24 @@ def delete_playlist(index):
     logging.warning(f"Invalid index {index} for DELETE request to /api/playlists")
     return jsonify({"success": False, "error": "Invalid index"}), 400
 
+@app.route('/api/playlists/delete_by_game', methods=['DELETE'])
+def delete_playlists_by_game():
+    data = request.json
+    game = data.get('game')
+
+    if not game:
+        return jsonify({"success": False, "error": "Missing game"}), 400
+
+    playlists = load_playlists()
+    initial_length = len(playlists['playlists'])
+    playlists['playlists'] = [p for p in playlists['playlists'] if p['game'] != game]
+
+    if len(playlists['playlists']) < initial_length:
+        save_playlists(playlists)
+        logging.info(f"Deleted playlists for game '{game}'")
+        return jsonify({"success": True}), 200
+    else:
+        return jsonify({"success": False, "error": "No matching playlists found"}), 400
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)

@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
-                    newPlaylist.index = data.index; // Assuming the API returns the index of the new playlist
                     playlists.push(newPlaylist);
                     playlists.sort((a, b) => {
                         if (a.game.localeCompare(b.game) === 0) {
@@ -81,12 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const gameMap = {};
 
-        playlists.forEach((playlist, index) => {
+        playlists.forEach((playlist) => {
             if (playlist.game.toLowerCase().includes(filter) || playlist.youtuber.toLowerCase().includes(filter)) {
                 if (!gameMap[playlist.game]) {
                     gameMap[playlist.game] = [];
                 }
-                gameMap[playlist.game].push({ ...playlist, index });
+                gameMap[playlist.game].push(playlist);
             }
         });
 
@@ -112,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const deleteAllButton = document.createElement('button');
             deleteAllButton.textContent = 'Delete All Playlists';
             deleteAllButton.classList.add('delete-all-button');
-            deleteAllButton.onclick = () => deleteAllPlaylists(game, gameMap[game], gameDiv);
+            deleteAllButton.onclick = () => deleteAllPlaylists(game, gameDiv);
             gameDivHeaderDiv.appendChild(deleteAllButton);
 
             const playlistsInnerDiv = document.createElement('div');
@@ -123,9 +122,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const playlistDiv = document.createElement('div');
                 playlistDiv.className = 'playlist';
                 playlistDiv.innerHTML = `
-                    <button class="delete-btn" data-index="${playlist.index}">X</button>
-                    <p><a href="${playlist.link}" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">${playlist.youtuber}</a></p>
-                    <p> - #<span class="video-number" data-index="${playlist.index}">${playlist.video_number}</span></p>
+                    <button class="delete-btn" data-index="${playlists.indexOf(playlist)}">X</button>
+                    <p><a href="${playlist.link}" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">${
+                    playlist.youtuber
+                }</a></p>
+                    <p> - #<span class="video-number" data-index="${playlists.indexOf(playlist)}">${playlist.video_number}</span></p>
                 `;
                 playlistsInnerDiv.appendChild(playlistDiv);
                 visibleCount++;
@@ -138,30 +139,23 @@ document.addEventListener('DOMContentLoaded', () => {
         addEventListeners();
     }
 
-    function deleteAllPlaylists(game, playlistsSubmitted, gameDiv) {
-        const deletePromises = playlistsSubmitted.map((playlist) => {
-            return fetch(`/api/playlists/${playlist.index}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        });
-
-        Promise.all(deletePromises)
-            .then((responses) => {
-                return Promise.all(responses.map((response) => response.json()));
-            })
-            .then((results) => {
-                const success = results.every((result) => result.success);
-                if (success) {
+    function deleteAllPlaylists(game, gameDiv) {
+        fetch('/api/playlists/delete_by_game', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ game }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
                     playlists = playlists.filter((playlist) => playlist.game !== game);
                     console.log(playlists);
                     gameDiv.remove();
-                    updateIndices();
                     updatePlaylistCount();
                 } else {
-                    console.error('Error deleting some playlists:', results);
+                    console.error('Error deleting some playlists:', data.error);
                 }
             })
             .catch((error) => console.error('Error deleting playlists:', error));
