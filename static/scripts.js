@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             assignColors(playlists);
             displayPlaylists(playlists);
             updatePlaylistCount();
+            updateGameCount();
         })
         .catch((error) => console.error('Error fetching playlists:', error));
 
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     displayPlaylists(playlists, currentFilter);
                     clearForm();
                     updatePlaylistCount();
+                    updateGameCount();
                 }
             })
             .catch((error) => console.error('Error adding playlist:', error));
@@ -136,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.getElementById('total-playlists').textContent = visibleCount;
+        updateGameCount();
         addEventListeners();
     }
 
@@ -154,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log(playlists);
                     gameDiv.remove();
                     updatePlaylistCount();
+                    updateGameCount();
                 } else {
                     console.error('Error deleting some playlists:', data.error);
                 }
@@ -239,6 +243,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalPlaylists = document.querySelectorAll('.playlist').length;
         document.getElementById('total-playlists').textContent = totalPlaylists;
     }
+
+    function updateGameCount() {
+        const totalGames = document.querySelectorAll('h2').length;
+        document.getElementById('total-games').textContent = totalGames;
+    }
 });
 
 function updateVideoNumber(index, newVideoNumber) {
@@ -272,6 +281,7 @@ function deletePlaylist(index, element) {
                 playlists = playlists.filter((playlist, idx) => idx !== parseInt(index));
                 updateIndices();
                 updatePlaylistCount();
+                updateGameCount();
             } else {
                 console.error('Error deleting playlist:', data.error);
             }

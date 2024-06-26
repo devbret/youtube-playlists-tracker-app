@@ -1,6 +1,6 @@
 # YouTube Playlists Tracker App
 
-![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-screenshot-ui.png)
+![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-minor-ui-enhancements.png)
 
 Catalog your viewing progress with specific YouTube playlists using this app.
 
