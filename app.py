@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 import json
 import os
 import logging
@@ -51,6 +51,15 @@ def sort_playlists(playlists):
 def index():
     logging.info('Accessed home page.')
     return render_template('index.html')
+
+@app.route('/network')
+def network():
+    logging.info('Accessed network graph page.')
+    return render_template('network.html')
+
+@app.route('/api/playlists.json')
+def get_playlists_json():
+    return send_from_directory('.', 'playlists.json')
 
 @app.route('/api/search_log', methods=['POST'])
 def log_search():
@@ -121,4 +130,4 @@ def delete_playlists_by_game():
         return jsonify({"success": False, "error": "No matching playlists found"}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=False, port=5500)

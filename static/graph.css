@@ -1,0 +1,41 @@
+* {
+    padding: 0px;
+    border: none;
+    margin: 0px;
+}
+body {
+    font-family: Arial, sans-serif;
+}
+.legend {
+    background-color: white;
+}
+.links line {
+    stroke: #999;
+    stroke-opacity: 0.6;
+}
+.nodes circle {
+    stroke: #000;
+    stroke-width: 3px;
+}
+.text {
+    font-size: 12px;
+}
+.tooltip {
+    position: absolute;
+    text-align: center;
+    height: auto;
+    padding: 2px;
+    font-size: 16px;
+    background: lightsteelblue;
+    border: 0px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.highlight {
+    stroke: yellow;
+    stroke-width: 2px;
+}
+.dimmed {
+    opacity: 0.1;
+}
