@@ -70,11 +70,7 @@ d3.json('/api/playlists.json')
             .attr('fill', (d) => (d.type === 'game' ? 'aqua' : 'magenta'))
             .call(d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended))
             .on('mouseover', mouseOver)
-            .on('mouseout', mouseOut)
-            .on('click', (event, d) => {
-                const urlToOpen = d.type === 'external' ? d.parentUrl : d.id;
-                window.open(urlToOpen, '_blank');
-            });
+            .on('mouseout', mouseOut);
 
         const label = container
             .append('g')
