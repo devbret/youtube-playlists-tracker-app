@@ -88,16 +88,28 @@ d3.json('/api/playlists.json')
             linkedByIndex[d.target.id + ',' + d.source.id] = 1;
         });
 
-        function isConnected(a, b) {
-            return linkedByIndex[a.id + ',' + b.id] || linkedByIndex[b.id + ',' + a.id] || a.id === b.id;
-        }
-
         function mouseOver(event, d) {
+            let youTuberPlaylists = 0;
+
+            for (let u = 0; u < links.length; u += 1) {
+                if (d.id == links[u].target.id) {
+                    youTuberPlaylists += 1;
+                }
+            }
+
             tooltip.transition().duration(300).style('opacity', 1);
-            tooltip
-                .html(d.id)
-                .style('left', event.pageX + 5 + 'px')
-                .style('top', event.pageY - 28 + 'px');
+
+            if (d.type === 'youtuber') {
+                tooltip
+                    .html(d.id + ' - ' + youTuberPlaylists + ' Playlists')
+                    .style('left', event.pageX + 5 + 'px')
+                    .style('top', event.pageY - 28 + 'px');
+            } else {
+                tooltip
+                    .html(d.id)
+                    .style('left', event.pageX + 5 + 'px')
+                    .style('top', event.pageY - 28 + 'px');
+            }
 
             node.classed('dimmed', true);
             link.classed('dimmed', true);
