@@ -100,8 +100,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const gameColor = colorMap[game];
             gameDivHeaderDiv.innerHTML = `<h2 style="color: ${gameColor}; text-shadow: 1px 1px black;">${game}</h2>`;
 
+            const playlistCount = gameMap[game].length;
             const openAllButton = document.createElement('button');
-            openAllButton.textContent = 'Open All Playlists';
+            openAllButton.textContent = `Open ${playlistCount} Playlists`;
             openAllButton.classList.add('open-all-button');
             openAllButton.onclick = () => {
                 gameMap[game].forEach((playlist) => {
@@ -111,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameDivHeaderDiv.appendChild(openAllButton);
 
             const deleteAllButton = document.createElement('button');
-            deleteAllButton.textContent = 'Delete All Playlists';
+            deleteAllButton.textContent = `Delete ${playlistCount} Playlists`;
             deleteAllButton.classList.add('delete-all-button');
             deleteAllButton.onclick = () => deleteAllPlaylists(game, gameDiv);
             gameDivHeaderDiv.appendChild(deleteAllButton);
@@ -155,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((data) => {
                 if (data.success) {
                     playlists = playlists.filter((playlist) => playlist.game !== game);
-                    console.log(playlists);
                     gameDiv.remove();
                     updatePlaylistCount();
                     updateGameCount();
