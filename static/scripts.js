@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('total-playlists').textContent = visibleCount;
         updateGameCount();
         addEventListeners();
+        updateYouTuberCount();
     }
 
     function deleteAllPlaylists(game, gameDiv) {
@@ -247,6 +248,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateGameCount() {
         const totalGames = document.querySelectorAll('h2').length;
         document.getElementById('total-games').textContent = totalGames;
+    }
+
+    function updateYouTuberCount() {
+        const totalYouTubers = [...document.querySelectorAll('.playlist-link')];
+        const uniqueYouTubers = [];
+        for (let p = 0; p < totalYouTubers.length; p += 1) {
+            if (uniqueYouTubers.every((e) => e !== String(totalYouTubers[p].innerText))) {
+                uniqueYouTubers.push(String(totalYouTubers[p].innerText));
+            }
+        }
+        document.getElementById('total-youtubers').textContent = uniqueYouTubers.length;
     }
 });
 

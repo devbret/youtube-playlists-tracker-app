@@ -187,16 +187,34 @@ button:hover {
     background-color: red;
 }
 
+#network-graph,
 #scrollToTop {
     position: fixed;
     bottom: 20px;
-    right: 20px;
     padding: 5px 10px;
     background-color: #000;
     color: #fff;
     text-align: center;
     cursor: pointer;
     border-radius: 5px;
+}
+
+#scrollToTop {
+    right: 20px;
+}
+
+#network-graph {
+    left: 20px;
+    background: white;
+    border: 1px solid black;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    max-height: 29px;
+}
+
+#network-graph p {
+    height: auto;
+    margin-top: 4px;
 }
 
 .open-all-button,
