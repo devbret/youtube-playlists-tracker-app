@@ -90,10 +90,13 @@ d3.json('/api/playlists.json')
 
         function mouseOver(event, d) {
             let youTuberPlaylists = 0;
+            let videoGamePlaylists = 0;
 
             for (let u = 0; u < links.length; u += 1) {
                 if (d.id == links[u].target.id) {
                     youTuberPlaylists += 1;
+                } else if (d.id == links[u].source.id) {
+                    videoGamePlaylists += 1;
                 }
             }
 
@@ -101,21 +104,25 @@ d3.json('/api/playlists.json')
 
             if (d.type === 'youtuber') {
                 tooltip
-                    .html(d.id + ' - ' + youTuberPlaylists + ' Playlists')
+                    .html(d.id + ' (' + youTuberPlaylists + ' Video Games)')
                     .style('left', event.pageX + 5 + 'px')
                     .style('top', event.pageY - 28 + 'px');
-            } else {
+            } else if (d.type === 'game') {
                 tooltip
-                    .html(d.id)
+                    .html(d.id + ' (' + videoGamePlaylists + ' YouTubers)')
                     .style('left', event.pageX + 5 + 'px')
                     .style('top', event.pageY - 28 + 'px');
             }
 
             node.classed('dimmed', true);
+            label.classed('dimmed', true);
             link.classed('dimmed', true);
             node.filter((n) => n === d || links.some((l) => (l.source === d && l.target === n) || (l.target === d && l.source === n)))
                 .classed('dimmed', false)
                 .classed('highlight', true);
+            label
+                .filter((n) => n === d || links.some((l) => (l.source === d && l.target === n) || (l.target === d && l.source === n)))
+                .classed('dimmed', false);
             link.filter((l) => l.source === d || l.target === d)
                 .classed('dimmed', false)
                 .classed('highlight', true);
@@ -124,6 +131,7 @@ d3.json('/api/playlists.json')
         function mouseOut(event, d) {
             tooltip.transition().duration(300).style('opacity', 0);
             node.classed('dimmed', false).classed('highlight', false);
+            label.classed('dimmed', false).classed('highlight', false);
             link.classed('dimmed', false).classed('highlight', false);
         }
 
