@@ -57,6 +57,20 @@ document.addEventListener('DOMContentLoaded', () => {
         debounceTimer = setTimeout(() => {
             currentFilter = event.target.value.toLowerCase();
             displayPlaylists(playlists, currentFilter);
+            fetch('/api/search_log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ search_term: currentFilter }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        console.log(data);
+                    }
+                })
+                .catch((error) => console.error('Error adding playlist:', error));
         }, 230);
     });
 

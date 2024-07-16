@@ -57,6 +57,15 @@ def network():
     logging.info('Accessed network graph page.')
     return render_template('network.html')
 
+@app.route('/analytics')
+def analytics():
+    logging.info('Accessed analytics page.')
+    return render_template('analytics.html')
+
+@app.route('/data/<filename>')
+def get_csv(filename):
+    return send_from_directory(os.path.abspath(os.path.dirname(__file__)), filename)
+
 @app.route('/api/playlists.json')
 def get_playlists_json():
     return send_from_directory('.', 'playlists.json')

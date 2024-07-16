@@ -209,12 +209,17 @@ button:hover {
     border: 1px solid black;
     padding-top: 0px;
     padding-bottom: 0px;
-    max-height: 29px;
+    max-height: 58px;
 }
 
-#network-graph p {
+#networkGraphPara {
     height: auto;
-    margin-top: 4px;
+    margin-top: 7px;
+}
+
+#analyticsPara {
+    height: auto;
+    margin-top: -10px;
 }
 
 .open-all-button,

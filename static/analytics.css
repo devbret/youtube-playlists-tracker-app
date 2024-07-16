@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#graphs {
+    width: 100vw;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    margin: 10px 0px 15px 0px;
+}
+
+text {
+    font-size: 16px;
+    text-decoration: underline;
+}
+
+.graph-container {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#home-link {
+    left: 20px;
+    background: white;
+    border: 1px solid black;
+    padding: 0px 10px;
+    max-height: 29px;
+    position: fixed;
+    bottom: 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#homePara {
+    height: auto;
+    margin-top: 4px;
+}
