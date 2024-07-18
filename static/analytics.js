@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const deleteCounts = {};
             const searchCounts = {};
             const searchQueries = {};
+            const accessedAnalyticsCounts = {};
 
             data.forEach((row) => {
                 const { Timestamp, Message, User } = row;
@@ -70,6 +71,14 @@ document.addEventListener('DOMContentLoaded', function () {
                             searchQueries[searchTerm] += 1;
                         }
                     }
+                    console.log(searchQueries);
+                }
+
+                if (Message.includes('Accessed analytics page.')) {
+                    if (!accessedAnalyticsCounts[date]) {
+                        accessedAnalyticsCounts[date] = 0;
+                    }
+                    accessedAnalyticsCounts[date]++;
                 }
             });
 
@@ -138,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
             createGraph(updateCounts, '#graph5', '', 'orange');
             createGraph(deleteCounts, '#graph6', '', 'grey');
             createGraph(searchCounts, '#graph7', '', 'magenta');
+            createGraph(accessedAnalyticsCounts, '#graph8', '', 'aqua');
 
             const createScatterPlot = (data1, data2, elementId, title, color1, color2) => {
                 const aggregatedData1 = Object.keys(data1).map((date) => ({
@@ -207,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
             createScatterPlot(updateCounts, deleteCounts, '#scatterPlot', '', 'orange', 'grey');
 
             const createWordCloud = (data, elementId) => {
-                const wordEntries = Object.entries(data).map(([word, count]) => ({ text: word, size: count * 10 }));
+                const wordEntries = Object.entries(data).map(([word, count]) => ({ text: word, size: count * 5 }));
 
                 const width = window.innerWidth * 0.43;
                 const height = 500;
@@ -224,13 +234,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 layout.start();
 
                 function draw(words) {
-                    d3.select(elementId)
-                        .append('svg')
-                        .attr('width', width)
-                        .attr('height', height)
-                        .append('g')
-                        .attr('transform', `translate(${width / 2},${height / 2})`)
-                        .selectAll('text')
+                    const zoom = d3.zoom().scaleExtent([0.5, 10]).on('zoom', zoomed);
+
+                    const svg = d3.select(elementId).append('svg').attr('width', width).attr('height', height).call(zoom);
+
+                    const g = svg.append('g').attr('transform', `translate(${width / 2},${height / 2})`);
+
+                    g.selectAll('text')
                         .data(words)
                         .enter()
                         .append('text')
@@ -239,6 +249,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         .attr('text-anchor', 'middle')
                         .attr('transform', (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
                         .text((d) => d.text);
+
+                    function zoomed(event) {
+                        g.attr('transform', event.transform);
+                    }
+
+                    svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
                 }
             };
 
