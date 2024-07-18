@@ -24,15 +24,15 @@ Catalog your viewing progress with specific YouTube playlists using this app.
 
 ## Application Usage Analytics
 
-![Nine different graphs, each displaying a unique metric.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-usage-analytics.png)
+![Different graphs, each displaying a unique metric.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-usage-analytics-smaller.png)
 
-You will notice that while using the app, each basic interaction is logged in a file named `app_log.csv`. This file powers nine data analysis tools, that help users of the YouTube Playlists Tracker App discover their personal usage habits.
+You will notice that while using the app, each basic interaction is logged in a file named `app_log.csv`. This file powers ten data analysis tools, that help users of the YouTube Playlists Tracker App discover their personal habits and preferences.
 
 ## Network Graph Feature
 
 ![Nine different graphs, each displaying a unique metric.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-network-graph.png)
 
-There is also a network graph feature, which displays the interconnections shared by your saved games and YouTubers.
+There is also a network graph feature, displaying the interconnections shared by your saved games and YouTubers.
 
 ## Other Thoughts
 
