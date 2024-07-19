@@ -27,7 +27,7 @@ text {
 .graph-container {
     background-color: #f9f9f9;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid black;
     margin-bottom: 20px;
     display: flex;
     align-items: center;

@@ -10,9 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const searchCounts = {};
             const searchQueries = {};
             const accessedAnalyticsCounts = {};
+            const accessedNetworkGraphCounts = {};
 
             data.forEach((row) => {
-                const { Timestamp, Message, User } = row;
+                const { Timestamp, Message } = row;
                 const date = Timestamp.split(',')[0];
 
                 if (Message.includes('Added new playlist')) {
@@ -80,7 +81,28 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     accessedAnalyticsCounts[date]++;
                 }
+
+                if (Message.includes('Accessed network graph page.')) {
+                    if (!accessedNetworkGraphCounts[date]) {
+                        accessedNetworkGraphCounts[date] = 0;
+                    }
+                    accessedNetworkGraphCounts[date]++;
+                }
             });
+
+            const fillMissingDates = (counts) => {
+                const dates = Object.keys(counts).sort((a, b) => new Date(a) - new Date(b));
+                const startDate = new Date(dates[0]);
+                const endDate = new Date(dates[dates.length - 1]);
+                const dateCounts = {};
+
+                for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+                    const dateString = date.toISOString().split('T')[0];
+                    dateCounts[dateString] = counts[dateString] || 0;
+                }
+
+                return dateCounts;
+            };
 
             const createGraph = (data, elementId, title, color) => {
                 const aggregatedData = Object.keys(data).map((date) => ({
@@ -140,14 +162,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     .text(title);
             };
 
-            createGraph(dateCounts, '#graph1', '', 'steelblue');
-            createGraph(postCounts, '#graph2', '', 'green');
-            createGraph(getCounts, '#graph3', '', 'red');
-            createGraph(youtuberCounts, '#graph4', '', 'purple');
-            createGraph(updateCounts, '#graph5', '', 'orange');
-            createGraph(deleteCounts, '#graph6', '', 'grey');
-            createGraph(searchCounts, '#graph7', '', 'magenta');
-            createGraph(accessedAnalyticsCounts, '#graph8', '', 'aqua');
+            const filledDateCounts = fillMissingDates(dateCounts);
+            const filledPostCounts = fillMissingDates(postCounts);
+            const filledGetCounts = fillMissingDates(getCounts);
+            const filledYoutuberCounts = fillMissingDates(youtuberCounts);
+            const filledUpdateCounts = fillMissingDates(updateCounts);
+            const filledDeleteCounts = fillMissingDates(deleteCounts);
+            const filledSearchCounts = fillMissingDates(searchCounts);
+            const filledAccessedAnalyticsCounts = fillMissingDates(accessedAnalyticsCounts);
+            const filledAccessedNetworkGraphCounts = fillMissingDates(accessedNetworkGraphCounts);
+
+            createGraph(filledDateCounts, '#graph1', '', 'steelblue');
+            createGraph(filledPostCounts, '#graph2', '', 'green');
+            createGraph(filledGetCounts, '#graph3', '', 'red');
+            createGraph(filledYoutuberCounts, '#graph4', '', 'purple');
+            createGraph(filledUpdateCounts, '#graph5', '', 'orange');
+            createGraph(filledDeleteCounts, '#graph6', '', 'grey');
+            createGraph(filledSearchCounts, '#graph7', '', 'magenta');
+            createGraph(filledAccessedAnalyticsCounts, '#graph8', '', 'aqua');
+            createGraph(filledAccessedNetworkGraphCounts, '#graph9', '', 'lime');
 
             const createScatterPlot = (data1, data2, elementId, title, color1, color2) => {
                 const aggregatedData1 = Object.keys(data1).map((date) => ({
