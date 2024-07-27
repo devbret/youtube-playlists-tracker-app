@@ -11,10 +11,20 @@ document.addEventListener('DOMContentLoaded', function () {
             const searchQueries = {};
             const accessedAnalyticsCounts = {};
             const accessedNetworkGraphCounts = {};
+            const hourCounts = {};
 
             data.forEach((row) => {
-                const { Timestamp, Message } = row;
-                const date = Timestamp.split(',')[0];
+                const { Time, Message } = row;
+                if (!Time || !Message) return;
+
+                const hour = Time.split(':')[0];
+
+                if (!hourCounts[hour]) {
+                    hourCounts[hour] = 0;
+                }
+                hourCounts[hour]++;
+
+                const date = row.Timestamp.split(',')[0];
 
                 if (Message.includes('Added new playlist')) {
                     if (!dateCounts[date]) {
@@ -72,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             searchQueries[searchTerm] += 1;
                         }
                     }
-                    console.log(searchQueries);
                 }
 
                 if (Message.includes('Accessed analytics page.')) {
@@ -250,7 +259,12 @@ document.addEventListener('DOMContentLoaded', function () {
             createScatterPlot(updateCounts, deleteCounts, '#scatterPlot', '', 'orange', 'grey');
 
             const createWordCloud = (data, elementId) => {
-                const wordEntries = Object.entries(data).map(([word, count]) => ({ text: word, size: count * 5 }));
+                const maxCount = Math.max(...Object.values(data));
+                const minCount = Math.min(...Object.values(data));
+                const wordEntries = Object.entries(data).map(([word, count]) => {
+                    const size = maxCount === minCount ? 30 : 10 + ((count - minCount) / (maxCount - minCount)) * 50;
+                    return { text: word, size };
+                });
 
                 const width = window.innerWidth * 0.43;
                 const height = 500;
@@ -290,8 +304,65 @@ document.addEventListener('DOMContentLoaded', function () {
                     svg.call(zoom.transform, d3.zoomIdentity.translate(width / 2, height / 2));
                 }
             };
-
             createWordCloud(searchQueries, '#wordCloud');
+
+            const createBarChart = (data, elementId, title, color) => {
+                const aggregatedData = Object.keys(data).map((hour) => ({
+                    hour: hour,
+                    count: data[hour],
+                }));
+
+                const sortedAggregatedData = aggregatedData.sort((a, b) => a.hour - b.hour);
+
+                const margin = { top: 20, right: 10, bottom: 30, left: 40 },
+                    width = window.innerWidth * 0.43 - margin.left - margin.right,
+                    height = 500 - margin.top - margin.bottom;
+
+                const svg = d3
+                    .select(elementId)
+                    .append('svg')
+                    .attr('width', width + margin.left + margin.right)
+                    .attr('height', height + margin.top + margin.bottom)
+                    .append('g')
+                    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                const x = d3
+                    .scaleBand()
+                    .domain(sortedAggregatedData.map((d) => d.hour))
+                    .range([0, width])
+                    .padding(0.1);
+
+                const y = d3
+                    .scaleLinear()
+                    .domain([0, d3.max(sortedAggregatedData, (d) => d.count)])
+                    .nice()
+                    .range([height, 0]);
+
+                svg.append('g').attr('transform', `translate(0,${height})`).call(d3.axisBottom(x));
+
+                svg.append('g').call(d3.axisLeft(y));
+
+                svg.selectAll('.bar')
+                    .data(sortedAggregatedData)
+                    .enter()
+                    .append('rect')
+                    .attr('class', 'bar')
+                    .attr('x', (d) => x(d.hour))
+                    .attr('y', (d) => y(d.count))
+                    .attr('width', x.bandwidth())
+                    .attr('height', (d) => height - y(d.count))
+                    .attr('fill', color);
+
+                svg.append('text')
+                    .attr('x', width / 2)
+                    .attr('y', 0 - margin.top / 2)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', '16px')
+                    .style('text-decoration', 'underline')
+                    .text(title);
+            };
+
+            createBarChart(hourCounts, '#hourlyActions', '', 'blue');
         })
         .catch(function (error) {
             console.error('Error fetching or parsing data:', error);
