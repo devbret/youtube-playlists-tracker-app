@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const fillMissingDates = (counts) => {
                 const dates = Object.keys(counts).sort((a, b) => new Date(a) - new Date(b));
                 const startDate = new Date(dates[0]);
-                const endDate = new Date(dates[dates.length - 1]);
+                const endDate = new Date();
                 const dateCounts = {};
 
                 for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const sortedAggregatedData = aggregatedData.sort((a, b) => a.hour - b.hour);
 
-                const margin = { top: 20, right: 10, bottom: 30, left: 40 },
+                const margin = { top: 20, right: 10, bottom: 30, left: 55 },
                     width = window.innerWidth * 0.43 - margin.left - margin.right,
                     height = 500 - margin.top - margin.bottom;
 
