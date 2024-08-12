@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let playlists = [];
+    let playlistsArray = [];
     let currentFilter = '';
     let debounceTimer;
     const colorMap = {};
@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/api/playlists')
         .then((response) => response.json())
         .then((data) => {
-            playlists = data.playlists;
-            assignColors(playlists);
-            displayPlaylists(playlists);
+            playlistsArray = data.playlists;
+            assignColors(playlistsArray);
+            displayPlaylists(playlistsArray);
             updatePlaylistCount();
             updateGameCount();
         })
@@ -35,15 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
-                    playlists.push(newPlaylist);
-                    playlists.sort((a, b) => {
+                    playlistsArray.push(newPlaylist);
+                    playlistsArray.sort((a, b) => {
                         if (a.game.localeCompare(b.game) === 0) {
                             return a.youtuber.localeCompare(b.youtuber);
                         }
                         return a.game.localeCompare(b.game);
                     });
-                    assignColors(playlists);
-                    displayPlaylists(playlists, currentFilter);
+                    assignColors(playlistsArray);
+                    displayPlaylists(playlistsArray, currentFilter);
                     clearForm();
                     updatePlaylistCount();
                     updateGameCount();
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             currentFilter = event.target.value.toLowerCase();
-            displayPlaylists(playlists, currentFilter);
+            displayPlaylists(playlistsArray, currentFilter);
             fetch('/api/search_log', {
                 method: 'POST',
                 headers: {
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 })
                 .catch((error) => console.error('Error adding playlist:', error));
-        }, 230);
+        }, 430);
     });
 
     function assignColors(playlists) {
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
-                    playlists = playlists.filter((playlist) => playlist.game !== game);
+                    playlistsArray = playlistsArray.filter((playlist) => playlist.game !== game);
                     gameDiv.remove();
                     updatePlaylistCount();
                     updateGameCount();
@@ -274,57 +274,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('total-youtubers').textContent = uniqueYouTubers.length;
     }
-});
-
-function updateVideoNumber(index, newVideoNumber) {
-    fetch(`/api/playlists/${index}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ video_number: newVideoNumber }),
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (!data.success) {
-                console.error('Error updating video number:', data.error);
-            }
+    function updateVideoNumber(index, newVideoNumber) {
+        fetch(`/api/playlists/${index}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ video_number: newVideoNumber }),
         })
-        .catch((error) => console.error('Error updating video number:', error));
-}
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data.success) {
+                    console.error('Error updating video number:', data.error);
+                }
+            })
+            .catch((error) => console.error('Error updating video number:', error));
+    }
 
-function deletePlaylist(index, element) {
-    fetch(`/api/playlists/${index}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                element.remove();
-                playlists = playlists.filter((playlist, idx) => idx !== parseInt(index));
-                updateIndices();
-                updatePlaylistCount();
-                updateGameCount();
-            } else {
-                console.error('Error deleting playlist:', data.error);
-            }
+    function deletePlaylist(index, element) {
+        fetch(`/api/playlists/${index}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
-        .catch((error) => console.error('Error deleting playlist:', error));
-}
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    element.remove();
+                    playlistsArray = playlistsArray.filter((playlist, idx) => idx !== parseInt(index));
+                    updateIndices();
+                    updatePlaylistCount();
+                    updateGameCount();
+                } else {
+                    console.error('Error deleting playlist:', data.error);
+                }
+            })
+            .catch((error) => console.error('Error deleting playlist:', error));
+    }
 
-function updateIndices() {
-    document.querySelectorAll('.playlist').forEach((playlistDiv, index) => {
-        playlistDiv.querySelector('.delete-btn').setAttribute('data-index', index);
-        playlistDiv.querySelector('.video-number').setAttribute('data-index', index);
-    });
-}
+    function updateIndices() {
+        document.querySelectorAll('.playlist').forEach((playlistDiv, index) => {
+            playlistDiv.querySelector('.delete-btn').setAttribute('data-index', index);
+            playlistDiv.querySelector('.video-number').setAttribute('data-index', index);
+        });
+    }
 
-document.getElementById('scrollToTop').addEventListener('click', function () {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
+    document.getElementById('scrollToTop').addEventListener('click', function () {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
     });
 });
