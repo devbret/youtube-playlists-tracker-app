@@ -1,11 +1,10 @@
 body {
     font-family: sans-serif;
-    background-color: #eef2f7;
+    background-color: white;
     color: #333;
     line-height: 1.6;
 }
 #graphs {
-    width: 100vw;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -42,24 +41,18 @@ text {
     border-radius: 8px;
     transition: transform 0.3s, box-shadow 0.3s;
 }
-.graph-container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
 #home-link {
     left: 20px;
     background: #fff;
     color: #000000;
-    padding: 5px 15px;
-    max-height: 40px;
+    padding: 0px 15px;
+    max-height: 35px;
     position: fixed;
     bottom: 20px;
     border: 1px solid black;
     text-align: center;
     cursor: pointer;
-    border-radius: 25px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    border-radius: 5px;
 }
 #homePara {
     height: auto;

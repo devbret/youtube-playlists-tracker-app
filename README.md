@@ -1,6 +1,6 @@
 # YouTube Playlists Tracker App
 
-![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-homepage.png)
+![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-home.png)
 
 Catalog your viewing progress with specific YouTube playlists using this app.
 
@@ -30,7 +30,7 @@ You will notice while using the application, each basic interaction is logged in
 
 ## Network Graph Feature
 
-![A visualization of the interconnections shared by each YouTuber and playlist.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-network-graph.png)
+![A visualization of the interconnections shared by each YouTuber and playlist.](https://hosting.photobucket.com/images/i/bernhoftbret/game-and-youtuber-network-graph.png)
 
 There is also a network graph feature, displaying the interconnections shared by your saved games and YouTubers. This tool is useful for exploring how any collected playlists and gamers relate with each other.
 
