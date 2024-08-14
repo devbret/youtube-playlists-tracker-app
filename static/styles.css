@@ -170,7 +170,7 @@ button:hover {
     top: 5px;
     left: 5px;
     background-color: rgba(211, 211, 211, 0.43);
-    color: white;
+    color: rgba(0, 0, 0, 0.66);
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -184,7 +184,7 @@ button:hover {
 }
 
 .delete-btn:hover {
-    background-color: red;
+    background-color: lightgray;
 }
 
 #network-graph,
@@ -229,11 +229,13 @@ button:hover {
     padding: 5px 10px;
     background-color: rgba(211, 211, 211, 0.23);
     font-size: 10px;
+    color: rgba(0, 0, 0, 0.66);
 }
 
 .open-all-button:hover,
 .delete-all-button:hover {
-    background-color: darkgray;
+    background-color: lightgray;
+    color: black;
 }
 
 .game-group-header-div {
