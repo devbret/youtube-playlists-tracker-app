@@ -172,7 +172,7 @@ d3.json('/api/playlists.json')
         const legend = svg
             .append('g')
             .attr('class', 'legend')
-            .attr('transform', `translate(${width - 200}, 20)`);
+            .attr('transform', `translate(${width - 190}, 30)`);
 
         legend
             .append('rect')
@@ -214,8 +214,8 @@ d3.json('/api/playlists.json')
             .append('a')
             .attr('href', '/')
             .style('position', 'fixed')
-            .style('top', '10px')
-            .style('left', '10px')
+            .style('bottom', '20px')
+            .style('left', '20px')
             .style('padding', '10px 20px')
             .style('background-color', 'white')
             .style('color', 'black')
