@@ -172,7 +172,7 @@ d3.json('/api/playlists.json')
         const legend = svg
             .append('g')
             .attr('class', 'legend')
-            .attr('transform', `translate(${width - 190}, 30)`);
+            .attr('transform', `translate(${width - 180}, 30)`);
 
         legend
             .append('rect')
