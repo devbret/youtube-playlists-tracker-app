@@ -203,6 +203,11 @@ button:hover {
     right: 20px;
 }
 
+#scrollToTop:hover {
+    background-color: darkgray;
+    color: black;
+}
+
 #network-graph {
     left: 20px;
     background: white;
