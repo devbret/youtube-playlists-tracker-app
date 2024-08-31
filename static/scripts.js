@@ -145,6 +145,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 }</a></p>
                     <p> - #<span class="video-number" data-index="${playlists.indexOf(playlist)}">${playlist.video_number}</span></p>
                 `;
+
+                const playlistLink = playlistDiv.querySelector('.playlist-link');
+                let isHovering = false;
+
+                playlistLink.addEventListener('mouseover', () => {
+                    isHovering = true;
+                });
+
+                playlistLink.addEventListener('mouseout', () => {
+                    isHovering = false;
+                });
+
+                document.addEventListener('keydown', (event) => {
+                    if (isHovering && event.key === 'c') {
+                        navigator.clipboard
+                            .writeText(playlistLink.href)
+                            .then(() => {
+                                console.log(`Copied URL to clipboard: ${playlistLink.href}`);
+                            })
+                            .catch((err) => {
+                                console.error('Failed to copy URL to clipboard', err);
+                            });
+                    }
+                });
+
                 playlistsInnerDiv.appendChild(playlistDiv);
                 visibleCount++;
             });
