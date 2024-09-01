@@ -352,13 +352,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.addEventListener('scroll', () => {
+    const progressBar = document.getElementById('progress-bar');
+
+    function throttle(fn, wait) {
+        let lastTime = 0;
+        return function (...args) {
+            const now = new Date().getTime();
+            if (now - lastTime >= wait) {
+                fn.apply(this, args);
+                lastTime = now;
+            }
+        };
+    }
+
+    function updateProgressBar() {
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrollPercentage = (scrollTop / scrollHeight) * 100;
+        progressBar.style.width = scrollPercentage + '%';
+    }
 
-        document.getElementById('progress-bar').style.width = scrollPercentage + '%';
-    });
+    document.addEventListener('scroll', throttle(updateProgressBar, 50));
 
     function centerProgressBar() {
         const progressBarContainer = document.getElementById('progress-bar-container');
@@ -366,11 +380,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewportWidth = document.documentElement.clientWidth;
 
         const leftOffset = (viewportWidth - containerWidth) / 2;
-
         progressBarContainer.style.left = `${leftOffset}px`;
     }
 
     centerProgressBar();
-
     window.addEventListener('resize', centerProgressBar);
 });
