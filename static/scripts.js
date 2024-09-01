@@ -351,4 +351,26 @@ document.addEventListener('DOMContentLoaded', () => {
             behavior: 'smooth',
         });
     });
+
+    document.addEventListener('scroll', () => {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercentage = (scrollTop / scrollHeight) * 100;
+
+        document.getElementById('progress-bar').style.width = scrollPercentage + '%';
+    });
+
+    function centerProgressBar() {
+        const progressBarContainer = document.getElementById('progress-bar-container');
+        const containerWidth = progressBarContainer.offsetWidth;
+        const viewportWidth = document.documentElement.clientWidth;
+
+        const leftOffset = (viewportWidth - containerWidth) / 2;
+
+        progressBarContainer.style.left = `${leftOffset}px`;
+    }
+
+    centerProgressBar();
+
+    window.addEventListener('resize', centerProgressBar);
 });
