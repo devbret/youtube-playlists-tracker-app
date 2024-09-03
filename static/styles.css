@@ -63,6 +63,7 @@ form {
 
 #submit-button {
     margin-bottom: 13px;
+    font-size: 13px;
 }
 
 label {
@@ -81,7 +82,7 @@ label {
     right: 15px;
     text-align: right;
     font-size: 13px;
-    padding-top: 10px;
+    padding-top: 8px;
 }
 
 .counter-container p {
