@@ -2,7 +2,7 @@
 
 ![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-home.png)
 
-Catalog your viewing progress with specific YouTube playlists using this app.
+Catalog your viewing progress with specific YouTube playlists, organized by user-defined categories, via this app.
 
 ## Set Up
 
@@ -26,14 +26,14 @@ Catalog your viewing progress with specific YouTube playlists using this app.
 
 ![Thirteen different graphs, each displaying a unique metric.](https://hosting.photobucket.com/images/i/bernhoftbret/application-usage-analytics.png)
 
-You will notice while using the application, each basic interaction is logged in a file named `app_log.csv`. This file powers thirteen data analysis tools, intended to help users of the YouTube Playlists Tracker App discover their personal habits and preferences over time.
+You will notice while using the application, each basic interaction is logged in a local file named `app_log.csv`. This file powers thirteen data analysis tools, intended to help users of the YouTube Playlists Tracker App discover their personal habits and preferences over time.
 
 ## Network Graph Feature
 
 ![A visualization of the interconnections shared by each YouTuber and playlist.](https://hosting.photobucket.com/images/i/bernhoftbret/game-and-youtuber-network-graph.png)
 
-There is also a network graph feature, displaying the interconnections shared by your saved games and YouTubers. This tool is useful for exploring how any collected playlists and gamers relate with each other.
+There is also a network graph feature, interactively displaying any connections shared by your saved playlist categories and individual YouTubers. This tool is useful for quickly exploring how any collected playlists and gamers relate with each other.
 
 ## Other Thoughts
 
-The intended use of this program is collecting and tracking the user's viewing progress with video game playthroughs on YouTube. Which are almost always organized as linkable playlists. But one could feasibly use this application to curate any variety of hyperlinked resources.
+The intended use of this program is collecting and tracking the user's viewing progress with video game playthroughs on YouTube. Which are almost always organized as linkable playlists. But one could feasibly use this application to curate any variety of hypermedia resources.
