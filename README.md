@@ -24,9 +24,9 @@ Catalog your viewing progress with specific YouTube playlists, organized by user
 
 ## Application Usage Analytics
 
-![Thirteen different graphs, each displaying a unique metric.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-usage-analytics-page.png)
+![Fourteen different graphs, each displaying a unique metric.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-usage-analytics-page.png)
 
-You will notice while using the application, each basic interaction is logged in a local file named `app_log.csv`. This file powers thirteen data analysis tools, intended to help users of the YouTube Playlists Tracker App discover their personal habits and preferences over time.
+You will notice while using the application, each basic interaction is logged in a local file named `app_log.csv`. This file powers fourteen data analysis tools, intended to help users of the YouTube Playlists Tracker App discover their personal habits and preferences over time.
 
 ## Network Graph Feature
 
