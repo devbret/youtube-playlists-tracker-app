@@ -184,6 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deleteAllPlaylists(game, gameDiv) {
+        if (!confirm('Are you sure you want to delete these playlists?')) {
+            return;
+        }
         fetch('/api/playlists/delete_by_game', {
             method: 'DELETE',
             headers: {
@@ -208,6 +211,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function addEventListeners() {
         document.querySelectorAll('.delete-btn').forEach((button) => {
             button.addEventListener('click', (event) => {
+                if (!confirm('Are you sure you want to delete this playlist?')) {
+                    return;
+                }
                 const index = event.target.getAttribute('data-index');
                 const playlistDiv = event.target.closest('.playlist');
                 deletePlaylist(index, playlistDiv);
