@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     d3.csv('/data/app_log.csv')
         .then(function (data) {
             const dateCounts = {};
-            const postCounts = {};
             const getCounts = {};
             const youtuberCounts = {};
             const updateCounts = {};
@@ -95,13 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         youtuberCounts[date] = new Set();
                     }
                     youtuberCounts[date].add(youtuber);
-                }
-
-                if (Message.includes('POST request to /api/playlists')) {
-                    if (!postCounts[date]) {
-                        postCounts[date] = 0;
-                    }
-                    postCounts[date]++;
                 }
 
                 if (Message.includes('GET request to /api/playlists')) {
@@ -230,7 +222,6 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             const filledDateCounts = fillMissingDates(dateCounts);
-            const filledPostCounts = fillMissingDates(postCounts);
             const filledGetCounts = fillMissingDates(getCounts);
             const filledYoutuberCounts = fillMissingDates(youtuberCounts);
             const filledUpdateCounts = fillMissingDates(updateCounts);
@@ -240,7 +231,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const filledAccessedNetworkGraphCounts = fillMissingDates(accessedNetworkGraphCounts);
 
             createGraph(filledDateCounts, '#graph1', '', 'steelblue');
-            createGraph(filledPostCounts, '#graph2', '', 'green');
             createGraph(filledGetCounts, '#graph3', '', 'red');
             createGraph(filledYoutuberCounts, '#graph4', '', 'purple');
             createGraph(filledUpdateCounts, '#graph5', '', 'orange');
@@ -542,6 +532,64 @@ document.addEventListener('DOMContentLoaded', function () {
                     .style('fill', (d) => colorScale(d.count));
             };
             createActivityHeatmap(hourlyData, '#activityHeatmap');
+
+            d3.json('/api/playlists.json')
+                .then(function (data) {
+                    const youtuberPlaylistsMap = new Map();
+
+                    data.playlists.forEach((d) => {
+                        if (!youtuberPlaylistsMap.has(d.youtuber)) {
+                            youtuberPlaylistsMap.set(d.youtuber, { youtuber: d.youtuber, count: 0 });
+                        }
+                        const currentCount = youtuberPlaylistsMap.get(d.youtuber).count;
+                        youtuberPlaylistsMap.set(d.youtuber, { youtuber: d.youtuber, count: currentCount + 1 });
+                    });
+
+                    const youtuberData = Array.from(youtuberPlaylistsMap.values())
+                        .sort((a, b) => b.count - a.count)
+                        .slice(0, 23);
+
+                    const margin = { top: 20, right: 30, bottom: 40, left: 150 },
+                        width = 800 - margin.left - margin.right,
+                        height = 500 - margin.top - margin.bottom;
+
+                    const svg = d3
+                        .select('#youtuberBarChart')
+                        .append('svg')
+                        .attr('width', width + margin.left + margin.right)
+                        .attr('height', height + margin.top + margin.bottom)
+                        .append('g')
+                        .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                    const x = d3
+                        .scaleLinear()
+                        .domain([0, d3.max(youtuberData, (d) => d.count)])
+                        .range([0, width]);
+
+                    const y = d3
+                        .scaleBand()
+                        .domain(youtuberData.map((d) => d.youtuber))
+                        .range([0, height])
+                        .padding(0.1);
+
+                    svg.selectAll('.bar')
+                        .data(youtuberData)
+                        .enter()
+                        .append('rect')
+                        .attr('class', 'bar')
+                        .attr('x', 0)
+                        .attr('y', (d) => y(d.youtuber))
+                        .attr('width', (d) => x(d.count))
+                        .attr('height', y.bandwidth())
+                        .attr('fill', 'orange');
+
+                    svg.append('g').attr('transform', `translate(0,${height})`).call(d3.axisBottom(x));
+
+                    svg.append('g').call(d3.axisLeft(y));
+                })
+                .catch(function (error) {
+                    console.error('Error loading or processing data:', error);
+                });
         })
         .catch(function (error) {
             console.error('Error fetching or parsing data:', error);
