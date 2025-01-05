@@ -1,56 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>YouTube Playlists Tracker App</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-    </head>
-    <body>
-        <header>
-            <div id="progress-bar-container">
-                <div id="progress-bar"></div>
-            </div>
-            <h1>YouTube Playlists Tracker App</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Playlists Tracker App</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+      </div>
+      <h1>YouTube Playlists Tracker App</h1>
 
-            <div class="form-container">
-                <form id="addPlaylistForm">
-                    <div class="form-group">
-                        <input type="text" id="game" name="game" placeholder="Enter game..." required />
-                    </div>
-                    <div class="form-group">
-                        <input type="number" id="video_number" name="video_number" value="1" required />
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="youtuber" name="youtuber" placeholder="Enter YouTuber..." required />
-                    </div>
-                    <div class="form-group">
-                        <input type="url" id="link" name="link" placeholder="Enter link..." required />
-                    </div>
-                    <button id="submit-button" type="submit">Add Playlist</button>
-                </form>
-            </div>
+      <div class="form-container">
+        <form id="addPlaylistForm">
+          <div class="form-group">
+            <input
+              type="text"
+              id="game"
+              name="game"
+              placeholder="Enter game..."
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="number"
+              id="video_number"
+              name="video_number"
+              value="1"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              id="youtuber"
+              name="youtuber"
+              placeholder="Enter YouTuber..."
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="url"
+              id="link"
+              name="link"
+              placeholder="Enter link..."
+              required
+            />
+          </div>
+          <button id="submit-button" type="submit">Add Playlist</button>
+        </form>
+      </div>
 
-            <div class="search-container">
-                <input type="text" id="search" name="search" placeholder="Search playlists..." />
-            </div>
+      <div class="search-container">
+        <input
+          type="text"
+          id="search"
+          name="search"
+          placeholder="Search playlists..."
+        />
+      </div>
 
-            <div class="counter-container">
-                <p><b>Total Playlists:</b> <span id="total-playlists"></span></p>
-                <p><b>Total YouTubers:</b> <span id="total-youtubers"></span></p>
-                <p><b>Total Games:</b> <span id="total-games"></span></p>
-            </div>
-        </header>
+      <div class="counter-container">
+        <p><b>Total Playlists:</b> <span id="total-playlists"></span></p>
+        <p><b>Total YouTubers:</b> <span id="total-youtubers"></span></p>
+        <p><b>Total Games:</b> <span id="total-games"></span></p>
+      </div>
+    </header>
 
-        <div id="playlists"></div>
+    <div id="playlists"></div>
 
-        <div id="scrollToTop">To Top</div>
+    <div id="scrollToTop">To Top</div>
 
-        <div id="network-graph">
-            <p id="networkGraphPara"><a href="/network">Network Graph</a></p>
-            <p id="analyticsPara"><a href="/analytics">Usage Analytics</a></p>
-        </div>
+    <div id="network-graph">
+      <p id="networkGraphPara"><a href="/network">Network Graph</a></p>
+      <p id="analyticsPara"><a href="/analytics">Usage Analytics</a></p>
+    </div>
 
-        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-    </body>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+  </body>
 </html>

@@ -1,76 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Application Usage Analytics</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='analytics.css') }}" />
-    </head>
-    <body>
-        <h1>Application Usage Analytics</h1>
-        <div id="graphs">
-            <div class="graph-container">
-                <h2>Number Of Playlists Added Over Time</h2>
-                <div id="graph1"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Top 23 YouTubers By Playlists Added</h2>
-                <div id="youtuberBarChart"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Number Of GET Requests To /api/playlists Over Time</h2>
-                <div id="graph3"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Number Of Unique YouTubers Added Over Time</h2>
-                <div id="graph4"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Number Of Playlist Updates Over Time</h2>
-                <div id="graph5"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Number Of Playlists Deleted Over Time</h2>
-                <div id="graph6"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Number Of Searches Over Time</h2>
-                <div id="graph7"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Playlist Updates Vs. Playlist Deletions</h2>
-                <div id="scatterPlot"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Word Cloud Of Search Queries</h2>
-                <div id="wordCloud"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Number Of Times Usage Analytics Page Is Accessed</h2>
-                <div id="graph8"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Number Of Times Network Graph Page Is Accessed</h2>
-                <div id="graph9"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Number Of Actions Per Hour Of The Day</h2>
-                <div id="hourlyActions"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Number Of Actions Per Day Of The Week</h2>
-                <div id="weeklyActions"></div>
-            </div>
-            <div class="graph-container">
-                <h2>Activity Heatmap By Hour And Day</h2>
-                <div id="activityHeatmap"></div>
-            </div>
-        </div>
-        <div id="home-link">
-            <p id="homePara"><a href="/">Home</a></p>
-        </div>
-        <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
-        <script src="{{ url_for('static', filename='analytics.js') }}"></script>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Application Usage Analytics</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='analytics.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Application Usage Analytics</h1>
+    <div id="graphs">
+      <div class="graph-container">
+        <h2>Number Of Playlists Added Over Time</h2>
+        <div id="graph1"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Top 23 YouTubers By Playlists Added</h2>
+        <div id="youtuberBarChart"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Number Of GET Requests To /api/playlists Over Time</h2>
+        <div id="graph3"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Number Of Unique YouTubers Added Over Time</h2>
+        <div id="graph4"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Number Of Playlist Updates Over Time</h2>
+        <div id="graph5"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Number Of Playlists Deleted Over Time</h2>
+        <div id="graph6"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Number Of Searches Over Time</h2>
+        <div id="graph7"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Playlist Updates Vs. Playlist Deletions</h2>
+        <div id="scatterPlot"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Word Cloud Of Search Queries</h2>
+        <div id="wordCloud"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Number Of Times Usage Analytics Page Is Accessed</h2>
+        <div id="graph8"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Number Of Times Network Graph Page Is Accessed</h2>
+        <div id="graph9"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Number Of Actions Per Hour Of The Day</h2>
+        <div id="hourlyActions"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Number Of Actions Per Day Of The Week</h2>
+        <div id="weeklyActions"></div>
+      </div>
+      <div class="graph-container">
+        <h2>Activity Heatmap By Hour And Day</h2>
+        <div id="activityHeatmap"></div>
+      </div>
+    </div>
+    <div id="home-link">
+      <p id="homePara"><a href="/">Home</a></p>
+    </div>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
+    <script src="{{ url_for('static', filename='analytics.js') }}"></script>
+  </body>
 </html>

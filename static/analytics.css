@@ -1,60 +1,60 @@
 body {
-    font-family: sans-serif;
-    background-color: white;
-    color: #333;
-    line-height: 1.6;
+  font-family: sans-serif;
+  background-color: white;
+  color: #333;
+  line-height: 1.6;
 }
 #graphs {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-around;
-    padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px;
 }
 h1 {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #000000;
-    margin-bottom: 20px;
+  text-align: center;
+  font-size: 2.5rem;
+  color: #000000;
+  margin-bottom: 20px;
 }
 h2 {
-    text-align: center;
-    font-size: 1.75rem;
-    color: #000000;
-    margin: 10px 0 15px;
+  text-align: center;
+  font-size: 1.75rem;
+  color: #000000;
+  margin: 10px 0 15px;
 }
 text {
-    font-size: 16px;
-    text-decoration: underline;
-    color: #000000;
+  font-size: 16px;
+  text-decoration: underline;
+  color: #000000;
 }
 .graph-container {
-    background-color: #fff;
-    padding: 15px;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 43px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    border-radius: 8px;
-    transition: transform 0.3s, box-shadow 0.3s;
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 8px;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 #home-link {
-    left: 20px;
-    background: #fff;
-    color: #000000;
-    padding: 0px 15px;
-    max-height: 35px;
-    position: fixed;
-    bottom: 20px;
-    border: 1px solid black;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 5px;
+  left: 20px;
+  background: #fff;
+  color: #000000;
+  padding: 0px 15px;
+  max-height: 35px;
+  position: fixed;
+  bottom: 20px;
+  border: 1px solid black;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
 }
 #homePara {
-    height: auto;
-    margin-top: 4px;
+  height: auto;
+  margin-top: 4px;
 }

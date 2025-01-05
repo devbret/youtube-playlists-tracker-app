@@ -8,8 +8,8 @@ Catalog your viewing progress with specific YouTube playlists, organized by user
 
 ### Programs Needed
 
--   [Git](https://git-scm.com/downloads)
--   [Python](https://www.python.org/downloads/) (When installing on Windows, make sure you check the ["Add python 3.xx to PATH"](https://hosting.photobucket.com/images/i/bernhoftbret/python.png) box.)
+- [Git](https://git-scm.com/downloads)
+- [Python](https://www.python.org/downloads/) (When installing on Windows, make sure you check the ["Add python 3.xx to PATH"](https://hosting.photobucket.com/images/i/bernhoftbret/python.png) box.)
 
 ### Steps
 
