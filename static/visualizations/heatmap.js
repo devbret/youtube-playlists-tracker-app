@@ -23,7 +23,7 @@ export const createActivityHeatmap = (data, elementId) => {
   });
 
   const margin = { top: 33, right: 20, bottom: 30, left: 100 },
-    width = window.innerWidth - 100 - margin.left - margin.right,
+    width = window.innerWidth * 0.45 - 50 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
     gridSizeX = width / 24,
     gridSizeY = height / 7;

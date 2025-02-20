@@ -7,7 +7,7 @@ export const createBarChart = (data, elementId, title, color) => {
   const sortedAggregatedData = aggregatedData.sort((a, b) => a.hour - b.hour);
 
   const margin = { top: 20, right: 10, bottom: 30, left: 55 },
-    width = window.innerWidth - 100 - margin.left - margin.right,
+    width = window.innerWidth * 0.45 - 50 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
   const svg = d3

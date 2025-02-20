@@ -16,7 +16,7 @@ export const createScatterPlot = (
   }));
 
   const margin = { top: 20, right: 30, bottom: 30, left: 40 },
-    width = window.innerWidth - 100 - margin.left - margin.right,
+    width = window.innerWidth * 0.45 - 50 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
   const svg = d3

@@ -1,6 +1,6 @@
 export const createHorizontalBarChart = function (data) {
   const margin = { top: 20, right: 30, bottom: 40, left: 175 },
-    width = window.innerWidth - 100 - margin.left - margin.right,
+    width = window.innerWidth * 0.45 - 50 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
   const svg = d3

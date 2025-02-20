@@ -5,10 +5,10 @@ body {
   line-height: 1.6;
 }
 #graphs {
-  /* display: flex;
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-around; */
+  justify-content: space-around;
   padding: 20px;
 }
 h1 {
@@ -40,7 +40,8 @@ text {
   flex-direction: column;
   border-radius: 8px;
   transition: transform 0.3s, box-shadow 0.3s;
-  min-width: 100%;
+  min-width: 45%;
+  max-width: 45%;
 }
 #home-link {
   left: 20px;

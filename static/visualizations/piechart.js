@@ -1,5 +1,5 @@
 export const createPieChart = (data, elementId, title) => {
-  const width = window.innerWidth - 100;
+  const width = window.innerWidth * 0.45 - 50;
   const height = 500;
   const margin = 40;
 

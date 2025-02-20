@@ -9,7 +9,7 @@ export const createWordCloud = (data, elementId) => {
     return { text: word, size };
   });
 
-  const width = window.innerWidth - 100;
+  const width = window.innerWidth * 0.45 - 50;
   const height = 500;
 
   const layout = d3.layout
