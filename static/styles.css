@@ -61,7 +61,8 @@ form {
   max-width: 200px;
 }
 
-#submit-button {
+#submit-button,
+.close-button {
   margin-bottom: 13px;
   font-size: 13px;
 }
@@ -229,7 +230,8 @@ button:hover {
 }
 
 .open-all-button,
-.delete-all-button {
+.delete-all-button,
+.view-logs-button {
   margin-left: 15px;
   margin-bottom: 2px;
   padding: 5px 10px;
@@ -239,7 +241,8 @@ button:hover {
 }
 
 .open-all-button:hover,
-.delete-all-button:hover {
+.delete-all-button:hover,
+.view-logs-button:hover {
   background-color: lightgray;
   color: black;
 }

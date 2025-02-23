@@ -1,3 +1,6 @@
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import { fillMissingDates } from "./utilities/fillmissingdates.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   let playlistsArray = [];
   let currentFilter = "";
@@ -115,11 +118,19 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.keys(gameMap).forEach((game) => {
       const gameDiv = document.createElement("div");
       gameDiv.className = "game-group";
+
       const gameDivHeaderDiv = document.createElement("div");
       gameDivHeaderDiv.classList.add("game-group-header-div");
       gameDiv.appendChild(gameDivHeaderDiv);
+
       const gameColor = colorMap[game];
       gameDivHeaderDiv.innerHTML = `<h2 style="color: ${gameColor}; text-shadow: 1px 1px black;">${game}</h2>`;
+
+      const viewLogsButton = document.createElement("button");
+      viewLogsButton.textContent = "View Activity";
+      viewLogsButton.classList.add("view-logs-button");
+      viewLogsButton.onclick = () => showLogsForGame(game);
+      gameDivHeaderDiv.appendChild(viewLogsButton);
 
       const playlistCount = gameMap[game].length;
       const openAllButton = document.createElement("button");
@@ -146,30 +157,29 @@ document.addEventListener("DOMContentLoaded", () => {
         const playlistDiv = document.createElement("div");
         playlistDiv.className = "playlist";
         playlistDiv.innerHTML = `
-                    <button class="delete-btn" data-index="${playlists.indexOf(
-                      playlist
-                    )}">X</button>
-                    <p><a href="${
-                      playlist.link
-                    }" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">${
-          playlist.youtuber
-        }</a></p>
-                    <p> - #<span class="video-number" data-index="${playlists.indexOf(
-                      playlist
-                    )}">${playlist.video_number}</span></p>
-                `;
+          <button class="delete-btn" data-index="${playlists.indexOf(
+            playlist
+          )}">X</button>
+          <p>
+            <a href="${
+              playlist.link
+            }" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">
+              ${playlist.youtuber}
+            </a>
+          </p>
+          <p> - #<span class="video-number" data-index="${playlists.indexOf(
+            playlist
+          )}">${playlist.video_number}</span></p>
+        `;
 
         const playlistLink = playlistDiv.querySelector(".playlist-link");
         let isHovering = false;
-
         playlistLink.addEventListener("mouseover", () => {
           isHovering = true;
         });
-
         playlistLink.addEventListener("mouseout", () => {
           isHovering = false;
         });
-
         document.addEventListener("keydown", (event) => {
           if (isHovering && event.key === "c") {
             navigator.clipboard
@@ -194,6 +204,142 @@ document.addEventListener("DOMContentLoaded", () => {
     updateGameCount();
     addEventListeners();
     updateYouTuberCount();
+  }
+
+  function showLogsForGame(game) {
+    fetch("/api/query_logs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ game }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const logs = data.logs;
+          const counts = {};
+          logs.forEach((log) => {
+            const date = log.timestamp;
+            counts[date] = (counts[date] || 0) + 1;
+          });
+          Object.keys(counts).forEach((date) => {
+            counts[date] = counts[date] / 2;
+          });
+          const chartData = Object.keys(counts).map((date) => ({
+            date,
+            count: counts[date],
+          }));
+          openLogModal(game, chartData);
+        } else {
+          console.error("No log data returned:", data.error);
+        }
+      })
+      .catch((error) => console.error("Error fetching logs:", error));
+  }
+
+  function openLogModal(game, chartData) {
+    let modal = document.getElementById("logModal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "logModal";
+      modal.style.position = "fixed";
+      modal.style.top = "0";
+      modal.style.left = "0";
+      modal.style.width = "100%";
+      modal.style.height = "100%";
+      modal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      modal.style.display = "flex";
+      modal.style.alignItems = "center";
+      modal.style.justifyContent = "center";
+      modal.style.zIndex = "100000000";
+      document.body.appendChild(modal);
+    }
+    modal.innerHTML = "";
+    const modalContent = document.createElement("div");
+    modalContent.style.backgroundColor = "#fff";
+    modalContent.style.padding = "20px";
+    modalContent.style.width = "80%";
+    modalContent.style.width = "900px";
+    modalContent.style.position = "relative";
+
+    const closeButton = document.createElement("button");
+    closeButton.textContent = "Close";
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "10px";
+    closeButton.style.right = "10px";
+    closeButton.classList.add("close-button");
+    closeButton.onclick = () => (modal.style.display = "none");
+    modalContent.appendChild(closeButton);
+
+    const title = document.createElement("h2");
+    title.textContent = `Activity For "${game}"`;
+    modalContent.appendChild(title);
+
+    const chartContainer = document.createElement("div");
+    chartContainer.id = "d3Chart";
+    modalContent.appendChild(chartContainer);
+
+    modal.appendChild(modalContent);
+    modal.style.display = "flex";
+
+    renderLineGraph(chartData, "#d3Chart");
+  }
+
+  function renderLineGraph(data, selector) {
+    const counts = {};
+    data.forEach((d) => {
+      counts[d.date] = d.count;
+    });
+
+    const filledCounts = fillMissingDates(counts);
+
+    const lineData = Object.keys(filledCounts)
+      .map((date) => ({ date: new Date(date), count: filledCounts[date] }))
+      .sort((a, b) => a.date - b.date);
+
+    const margin = { top: 20, right: 20, bottom: 30, left: 40 },
+      width = 870 - margin.left - margin.right,
+      height = 300 - margin.top - margin.bottom;
+
+    const svg = d3
+      .select(selector)
+      .html("")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    const x = d3
+      .scaleTime()
+      .domain(d3.extent(lineData, (d) => d.date))
+      .range([0, width]);
+
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(lineData, (d) => d.count)])
+      .nice()
+      .range([height, 0]);
+
+    svg
+      .append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x));
+
+    svg.append("g").call(d3.axisLeft(y));
+
+    const line = d3
+      .line()
+      .x((d) => x(d.date))
+      .y((d) => y(d.count))
+      .curve(d3.curveMonotoneX);
+
+    svg
+      .append("path")
+      .datum(lineData)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 2)
+      .attr("d", line);
   }
 
   function deleteAllPlaylists(game, gameDiv) {

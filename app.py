@@ -188,6 +188,30 @@ def delete_playlists_by_game():
     logging.debug(f"Processing time for DELETE /api/playlists/delete_by_game: {end_time - start_time:.4f} seconds")
     return response
 
+@app.route('/api/query_logs', methods=['POST'])
+def query_logs():
+    data = request.get_json()
+    game_title = data.get('game')
+    if not game_title:
+        return jsonify({"success": False, "error": "No game title provided."}), 400
+
+    results = []
+    try:
+        with open('app_log.csv', 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if game_title.lower() in row['Message'].lower():
+                    results.append({
+                        "timestamp": row['Timestamp'],
+                        "time": row['Time'],
+                        "message": row['Message']
+                    })
+    except Exception as e:
+        logging.error(f"Error reading log file: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+    return jsonify({"success": True, "logs": results}), 200
+
 @app.errorhandler(404)
 def page_not_found(e):
     logging.error(f"404 error occurred: {e}")
