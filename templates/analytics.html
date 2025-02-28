@@ -6,7 +6,7 @@
     <title>Application Usage Analytics</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='analytics.css') }}"
+      href="{{ url_for('static', filename='/app-analytics/analytics.css') }}"
     />
   </head>
   <body>
@@ -80,7 +80,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
     <script
       type="module"
-      src="{{ url_for('static', filename='analytics.js') }}"
+      src="{{ url_for('static', filename='/app-analytics/analytics.js') }}"
     ></script>
   </body>
 </html>

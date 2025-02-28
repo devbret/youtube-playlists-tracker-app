@@ -7,7 +7,7 @@ import { createBarChartTwo } from "./visualizations/simplebarchart.js";
 import { createActivityHeatmap } from "./visualizations/heatmap.js";
 import { createHorizontalBarChart } from "./visualizations/horizontalbarchart.js";
 import { createPieChart } from "./visualizations/piechart.js";
-import { fillMissingDates } from "./utilities/fillmissingdates.js";
+import { fillMissingDates } from "../utilities/fillmissingdates.js";
 
 // API Calls
 document.addEventListener("DOMContentLoaded", async function () {
