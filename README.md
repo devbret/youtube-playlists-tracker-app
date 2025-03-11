@@ -22,6 +22,12 @@ Catalog your viewing progress with specific YouTube playlists, organized by user
 7. Enter details for a favorite playlist into the four fields at the top of the program, and press the "Add Playlist" button. This can be repeated any number of times.
 8. You can now see a collection of playlists, auto-populating on the screen. These entries can be filtered via the search bar at the top left of your screen.
 
+## Video Game Activity
+
+![Total activity for a specific video game. In this case, it is "Skyrim".](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/442ce7ed-2a62-4fee-9e0e-3efe90eb06bd.png)
+
+Each video game has a "View Activity" button, which displays the relevant actions for a given game, since being added. These data visualizations are intended to help explore how frequently and when you engage with a particular video game.
+
 ## Application Usage Analytics
 
 ![Fourteen different graphs, each displaying a unique metric.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/da1a156d-0db0-4635-bc0c-a3d15340a3d0.png)
