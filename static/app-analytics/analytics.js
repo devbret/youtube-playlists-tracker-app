@@ -7,6 +7,7 @@ import { createBarChartTwo } from "./visualizations/simplebarchart.js";
 import { createActivityHeatmap } from "./visualizations/heatmap.js";
 import { createHorizontalBarChart } from "./visualizations/horizontalbarchart.js";
 import { createPieChart } from "./visualizations/piechart.js";
+import { createCalendarHeatmap } from "./visualizations/calendarheatmap.js";
 import { fillMissingDates } from "../utilities/fillmissingdates.js";
 
 // API Calls
@@ -38,10 +39,19 @@ document.addEventListener("DOMContentLoaded", async function () {
       };
       const requestCounts = { GET: 0, POST: 0, PUT: 0, DELETE: 0 };
 
+      const dailyEventCounts = {};
+
       // Data Processing
       data.forEach((row) => {
         // Processing Variables
         const { Timestamp, Time, Message } = row;
+
+        // Normalize date string (YYYY-MM-DD)
+        const dateStr = (Timestamp || "").trim();
+        if (dateStr) {
+          if (!dailyEventCounts[dateStr]) dailyEventCounts[dateStr] = 0;
+          dailyEventCounts[dateStr]++;
+        }
 
         // First Stage
         if (Timestamp && Time) {
@@ -197,6 +207,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         accessedNetworkGraphCounts
       );
 
+      const filledDailyEventCounts = fillMissingDates(dailyEventCounts);
+
       // Creating Visualizations
       createGraph(filledDateCounts, "#graph1", "", "steelblue");
       createGraph(filledGetCounts, "#graph3", "", "red");
@@ -219,6 +231,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       createBarChartTwo(dayCounts, "#weeklyActions", "", "blue");
       createActivityHeatmap(hourlyData, "#activityHeatmap");
       createPieChart(requestCounts, "#requestPieChart", "");
+
+      createCalendarHeatmap(filledDailyEventCounts, "#calendarHeatmap");
     })
     .catch(function (error) {
       console.error("Error fetching or parsing data:", error);

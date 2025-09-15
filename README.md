@@ -40,7 +40,7 @@ Each video game has a "View Activity" button, which displays the relevant action
 
 ![Fourteen different graphs, each displaying a unique metric.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/da1a156d-0db0-4635-bc0c-a3d15340a3d0.png)
 
-You will notice while using the application, each basic interaction is logged in a local file named `app_log.csv`. This file powers fifteen data analysis tools, intended to help users of the YouTube Playlists Tracker App discover their personal habits and preferences over time.
+You will notice while using the application, each basic interaction is logged in a local file named `app_log.csv`. This file powers 16 data analysis tools, intended to help users of the YouTube Playlists Tracker App discover their personal habits and preferences over time.
 
 ## Network Graph Feature
 
