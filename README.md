@@ -1,6 +1,6 @@
 # YouTube Playlists Tracker App
 
-![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-home-page.png)
+![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/760b23fa-86e2-4ea0-ad88-f2047b85f397.png)
 
 Catalog your viewing progress with specific YouTube playlists, organized by user-defined categories, via this app.
 
@@ -32,22 +32,22 @@ Catalog your viewing progress with specific YouTube playlists, organized by user
 
 ## Video Game Activity
 
-![Total activity for a specific video game. In this case, it is "Skyrim".](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/442ce7ed-2a62-4fee-9e0e-3efe90eb06bd.png)
+![Total activity for a specific video game. In this case, it is "Skyrim".](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/621523be-bfea-4d99-8275-b0b7fc01726d.png)
 
-Each video game has a "View Activity" button, which displays the relevant actions for a given game, since being added. These data visualizations are intended to help explore how frequently and when you engage with a particular video game.
+Each video game has a "View Activity" button, which displays the volume of relevant actions over time for a given game, since being first added. These data visualizations are intended to help explore how frequently and when you engage with a particular video game.
 
 ## Application Usage Analytics
 
-![Fourteen different graphs, each displaying a unique metric.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/da1a156d-0db0-4635-bc0c-a3d15340a3d0.png)
+![Sixteen different graphs, each displaying a unique metric.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/538ec2ba-85b6-4c3f-8a59-f4eb2a322f2f.png)
 
 You will notice while using the application, each basic interaction is logged in a local file named `app_log.csv`. This file powers 16 data analysis tools, intended to help users of the YouTube Playlists Tracker App discover their personal habits and preferences over time.
 
 ## Network Graph Feature
 
-![A visualization of the interconnections shared by each YouTuber and playlist.](https://hosting.photobucket.com/images/i/bernhoftbret/youtube-playlists-tracker-app-network-graph-page.png)
+![A visualization of the interconnections shared by each YouTuber and playlist category.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/01d37f92-49b6-473a-82a1-c794a6ea6a7e.png)
 
-There is also a network graph feature, interactively displaying any connections shared by your saved playlist categories and individual YouTubers. This tool is useful for quickly exploring how any collected playlists and gamers relate with each other.
+There is also an interactive network graph for exploring connections among your saved playlist categories and individual YouTubers. This utility is helpful for quickly understanding how collected playlist categories and gamers relate to each other.
 
 ## Other Thoughts
 
-The intended use of this program is collecting and tracking the user's viewing progress with video game playthroughs on YouTube. Which are almost always organized as linkable playlists. But one could feasibly use this application to curate any variety of hypermedia resources.
+The intended use of this program is for collecting and tracking the user's viewing progress with video game playthroughs on YouTube. Which are almost always organized as linkable playlists. But one could feasibly use this application to curate any variety of linkable hypermedia.
