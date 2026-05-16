@@ -9,7 +9,7 @@ const svg = d3
   .call(
     d3.zoom().on("zoom", function (event) {
       container.attr("transform", event.transform);
-    })
+    }),
   );
 
 const container = svg.append("g");
@@ -27,7 +27,7 @@ const simulation = d3
     d3
       .forceLink()
       .id((d) => d.id)
-      .distance(100)
+      .distance(100),
   )
   .force("charge", d3.forceManyBody().strength(-400))
   .force("center", d3.forceCenter(width / 2, height / 2));
@@ -78,7 +78,7 @@ d3.json("/api/playlists.json")
           .drag()
           .on("start", dragstarted)
           .on("drag", dragged)
-          .on("end", dragended)
+          .on("end", dragended),
       )
       .on("mouseover", mouseOver)
       .on("mouseout", mouseOut);
@@ -135,8 +135,8 @@ d3.json("/api/playlists.json")
             links.some(
               (l) =>
                 (l.source === d && l.target === n) ||
-                (l.target === d && l.source === n)
-            )
+                (l.target === d && l.source === n),
+            ),
         )
         .classed("dimmed", false)
         .classed("highlight", true);
@@ -147,8 +147,8 @@ d3.json("/api/playlists.json")
             links.some(
               (l) =>
                 (l.source === d && l.target === n) ||
-                (l.target === d && l.source === n)
-            )
+                (l.target === d && l.source === n),
+            ),
         )
         .classed("dimmed", false);
       link

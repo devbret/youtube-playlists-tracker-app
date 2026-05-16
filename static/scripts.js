@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
         playlistDiv.className = "playlist";
         playlistDiv.innerHTML = `
           <button class="delete-btn" data-index="${playlists.indexOf(
-            playlist
+            playlist,
           )}">X</button>
           <p>
             <a href="${
@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </a>
           </p>
           <p> - #<span class="video-number" data-index="${playlists.indexOf(
-            playlist
+            playlist,
           )}">${playlist.video_number}</span></p>
         `;
 
@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         if (data.success) {
           playlistsArray = playlistsArray.filter(
-            (playlist) => playlist.game !== game
+            (playlist) => playlist.game !== game,
           );
           gameDiv.remove();
           updatePlaylistCount();
@@ -501,7 +501,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.success) {
           element.remove();
           playlistsArray = playlistsArray.filter(
-            (playlist, idx) => idx !== parseInt(index)
+            (playlist, idx) => idx !== parseInt(index),
           );
           updateIndices();
           updatePlaylistCount();
@@ -558,7 +558,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function centerProgressBar() {
     const progressBarContainer = document.getElementById(
-      "progress-bar-container"
+      "progress-bar-container",
     );
     const containerWidth = progressBarContainer.offsetWidth;
     const viewportWidth = document.documentElement.clientWidth;

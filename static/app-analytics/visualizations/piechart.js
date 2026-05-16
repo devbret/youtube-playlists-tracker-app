@@ -24,7 +24,7 @@ export const createPieChart = (data, elementId, title) => {
     Object.entries(data).map(([key, value]) => ({
       key,
       value,
-    }))
+    })),
   );
 
   const arc = d3.arc().innerRadius(0).outerRadius(radius);

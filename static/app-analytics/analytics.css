@@ -4,6 +4,7 @@ body {
   color: #333;
   line-height: 1.6;
 }
+
 #graphs {
   display: flex;
   flex-wrap: wrap;
@@ -11,23 +12,27 @@ body {
   justify-content: space-around;
   padding: 20px;
 }
+
 h1 {
   text-align: center;
   font-size: 2.5rem;
   color: #000000;
   margin-bottom: 20px;
 }
+
 h2 {
   text-align: center;
   font-size: 1.75rem;
   color: #000000;
   margin: 10px 0 15px;
 }
+
 text {
   font-size: 16px;
   text-decoration: underline;
   color: #000000;
 }
+
 .graph-container {
   background-color: #fff;
   padding: 15px;
@@ -39,10 +44,40 @@ text {
   justify-content: center;
   flex-direction: column;
   border-radius: 8px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
   min-width: 45%;
   max-width: 45%;
+  height: 600px;
+  box-sizing: border-box;
 }
+
+.calendar-heatmap-container {
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.calendar-heatmap-container h2 {
+  flex: 0 0 auto;
+}
+
+#calendarHeatmap {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+#calendarHeatmap svg {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
+}
+
 #home-link {
   left: 20px;
   background: #fff;
@@ -56,6 +91,7 @@ text {
   cursor: pointer;
   border-radius: 5px;
 }
+
 #homePara {
   height: auto;
   margin-top: 4px;

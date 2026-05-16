@@ -1,189 +1,196 @@
-const margin = { top: 20, right: 10, bottom: 30, left: 40 },
-  width = window.innerWidth * 0.45 - 50 - margin.left - margin.right,
-  height = 500 - margin.top - margin.bottom;
+export const createCalendarHeatmap = (data, elementId) => {
+  const container = d3.select(elementId);
 
-export function createCalendarHeatmap(dataObj, selector) {
-  const parseISO = d3.timeParse("%Y-%m-%d");
-  const entries = Object.entries(dataObj)
-    .map(([k, v]) => ({ date: parseISO(k), value: +v }))
-    .filter((d) => d.date instanceof Date && !isNaN(d.date));
+  container.selectAll("*").remove();
 
-  const container = d3.select(selector).html("");
   const containerNode = container.node();
 
-  const graphParent =
-    containerNode && containerNode.closest
-      ? containerNode.closest(".graph-container")
-      : null;
-
-  if (graphParent) {
-    graphParent.style.minHeight = `580px`;
-    graphParent.style.maxHeight = `580px`;
-    if (!graphParent.style.display) graphParent.style.display = "block";
-  }
-
-  if (!entries.length) {
-    container.html("<p>No data available.</p>");
+  if (!containerNode) {
+    console.error(`Calendar heatmap container not found: ${elementId}`);
     return;
   }
 
-  const [minDate, maxDate] = d3.extent(entries, (d) => d.date);
-  const allDays = d3.timeDay.range(
-    d3.timeDay.floor(minDate),
-    d3.timeDay.offset(d3.timeDay.ceil(maxDate), 1)
+  const parentWidth = containerNode.getBoundingClientRect().width;
+  const parentHeight = containerNode.getBoundingClientRect().height;
+
+  const margin = {
+    top: 40,
+    right: 30,
+    bottom: 30,
+    left: 60,
+  };
+
+  const availableHeight = parentHeight - margin.top - margin.bottom;
+
+  const parseDate = d3.timeParse("%Y-%m-%d");
+  const formatDate = d3.timeFormat("%Y-%m-%d");
+
+  const heatmapData = Object.entries(data)
+    .map(([date, count]) => ({
+      date: parseDate(date),
+      count: count || 0,
+    }))
+    .filter((d) => d.date);
+
+  if (heatmapData.length === 0) {
+    container
+      .append("p")
+      .text("No calendar heatmap data available.")
+      .style("text-align", "center");
+
+    return;
+  }
+
+  const minDate = d3.min(heatmapData, (d) => d.date);
+  const maxDate = d3.max(heatmapData, (d) => d.date);
+
+  const startDate = d3.timeWeek.floor(minDate);
+  const endDate = d3.timeWeek.ceil(maxDate);
+
+  const allDates = d3.timeDays(startDate, d3.timeDay.offset(endDate, 1));
+
+  const dateMap = new Map(
+    heatmapData.map((d) => [formatDate(d.date), d.count]),
   );
-  const keyISO = d3.timeFormat("%Y-%m-%d");
-  const valueMap = new Map(entries.map((d) => [keyISO(d.date), d.value]));
-  const dense = allDays.map((d) => ({
-    date: d,
-    value: valueMap.get(keyISO(d)) ?? 0,
-  }));
 
-  const byYear = d3.groups(dense, (d) => d.date.getFullYear());
-  byYear.sort((a, b) => d3.ascending(a[0], b[0]));
+  const maxCount = d3.max(heatmapData, (d) => d.count) || 1;
 
-  const cellPad = 2;
-  const leftPadForLabels = 30;
-  const topPadForLabels = 18;
-  const yearGap = 26;
+  const colorScale = d3
+    .scaleSequential(d3.interpolateBlues)
+    .domain([0, maxCount]);
 
-  const maxVal = d3.max(dense, (d) => d.value) || 1;
-  const color = d3
-    .scaleLinear()
-    .domain([0, maxVal])
-    .range(["#eef2ff", "#1f77b4"]);
+  const cellSize = Math.max(availableHeight / 7, 8);
 
-  const fmtMonth = d3.timeFormat("%b");
-  const fmtISO = d3.timeFormat("%Y-%m-%d");
+  const weekCount = d3.timeWeek.count(startDate, endDate) + 1;
+  const chartWidth = weekCount * cellSize;
+  const chartHeight = cellSize * 7;
 
-  byYear.forEach(([year, days]) => {
-    const firstDay = d3.timeDay.floor(new Date(year, 0, 1));
-    const lastDay = d3.timeDay.floor(new Date(year, 11, 31));
+  const totalWidth = Math.max(
+    parentWidth,
+    chartWidth + margin.left + margin.right,
+  );
 
-    const weeks =
-      d3.timeWeek.count(
-        d3.timeWeek.floor(firstDay),
-        d3.timeWeek.ceil(lastDay)
-      ) + 1;
+  const totalHeight = parentHeight;
 
-    const parentInnerWidth = graphParent
-      ? Math.max(120, graphParent.clientWidth - 50 - margin.left - margin.right)
-      : Math.max(120, width);
+  const svg = container
+    .append("svg")
+    .attr("width", totalWidth)
+    .attr("height", "100%")
+    .attr("viewBox", `0 0 ${totalWidth} ${totalHeight}`)
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .style("display", "block");
 
-    const innerGridHeight = Math.max(120, height);
+  const chartGroup = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    const maxCellSizeFromWidth =
-      (parentInnerWidth - leftPadForLabels - 2) / weeks - cellPad;
-    const maxCellSizeFromHeight =
-      (innerGridHeight - topPadForLabels - 2) / 7 - cellPad;
+  const existingTooltip = d3.select("body").select(".calendar-heatmap-tooltip");
 
-    const baseCell = 14;
-    const cellSize = Math.max(
-      6,
-      Math.min(baseCell, maxCellSizeFromWidth, maxCellSizeFromHeight)
-    );
+  if (!existingTooltip.empty()) {
+    existingTooltip.remove();
+  }
 
-    const svgWidth = margin.left + parentInnerWidth + margin.right;
-    const svgHeight =
-      margin.top +
-      (topPadForLabels + 7 * (cellSize + cellPad) + 2) +
-      margin.bottom;
+  const tooltip = d3
+    .select("body")
+    .append("div")
+    .attr("class", "calendar-heatmap-tooltip")
+    .style("position", "absolute")
+    .style("visibility", "hidden")
+    .style("background", "#ffffff")
+    .style("border", "1px solid #cccccc")
+    .style("border-radius", "4px")
+    .style("padding", "6px 8px")
+    .style("font-size", "14px")
+    .style("box-shadow", "0 2px 8px rgba(0, 0, 0, 0.15)")
+    .style("pointer-events", "none")
+    .style("z-index", "9999");
 
-    const svg = container
-      .append("svg")
-      .attr("width", svgWidth)
-      .attr("height", svgHeight)
-      .style("display", "block")
-      .style("margin-bottom", yearGap + "px");
+  chartGroup
+    .selectAll(".calendar-cell")
+    .data(allDates)
+    .enter()
+    .append("rect")
+    .attr("class", "calendar-cell")
+    .attr("x", (d) => d3.timeWeek.count(startDate, d) * cellSize)
+    .attr("y", (d) => d.getDay() * cellSize)
+    .attr("width", Math.max(cellSize - 2, 1))
+    .attr("height", Math.max(cellSize - 2, 1))
+    .attr("rx", 2)
+    .attr("ry", 2)
+    .style("fill", (d) => {
+      const dateKey = formatDate(d);
+      const count = dateMap.get(dateKey) || 0;
 
-    svg
-      .append("text")
-      .attr("x", margin.left)
-      .attr("y", margin.top - 8)
-      .attr("dominant-baseline", "baseline")
-      .attr("font-size", 12)
-      .attr("font-weight", 600)
-      .attr("fill", "#444")
-      .text(year);
+      return count === 0 ? "#eeeeee" : colorScale(count);
+    })
+    .on("mouseover", function (event, d) {
+      const dateKey = formatDate(d);
+      const count = dateMap.get(dateKey) || 0;
 
-    const g = svg
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${margin.left + leftPadForLabels},${
-          margin.top + topPadForLabels
-        })`
-      );
+      d3.select(this).style("stroke", "#000000").style("stroke-width", 1);
 
-    const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const wl = svg
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${margin.left},${margin.top + topPadForLabels})`
-      );
-    weekdays.forEach((w, i) => {
-      if (i % 2 === 0) {
-        wl.append("text")
-          .attr("x", leftPadForLabels - 6)
-          .attr("y", i * (cellSize + cellPad) + cellSize * 0.75)
-          .attr("text-anchor", "end")
-          .attr("font-size", 10)
-          .attr("fill", "#666")
-          .text(w);
-      }
+      tooltip
+        .style("visibility", "visible")
+        .html(`<strong>${dateKey}</strong><br />Events: ${count}`);
+    })
+    .on("mousemove", function (event) {
+      tooltip
+        .style("top", `${event.pageY - 40}px`)
+        .style("left", `${event.pageX + 12}px`);
+    })
+    .on("mouseout", function () {
+      d3.select(this).style("stroke", "none");
+
+      tooltip.style("visibility", "hidden");
     });
 
-    const firstOfMonths = d3.timeMonths(
-      new Date(year, 0, 1),
-      new Date(year + 1, 0, 1)
-    );
-    const ml = svg
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${margin.left + leftPadForLabels},${
-          margin.top + topPadForLabels - 5
-        })`
-      );
-    firstOfMonths.forEach((m0) => {
-      const x =
-        d3.timeWeek.count(d3.timeWeek.floor(firstDay), d3.timeWeek.floor(m0)) *
-        (cellSize + cellPad);
-      ml.append("text")
-        .attr("x", x + 2)
-        .attr("y", -2)
-        .attr("font-size", 10)
-        .attr("fill", "#666")
-        .text(fmtMonth(m0));
-    });
+  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    const cells = g
-      .selectAll("rect")
-      .data(days)
-      .enter()
-      .append("rect")
-      .attr("width", cellSize)
-      .attr("height", cellSize)
-      .attr("rx", 2)
-      .attr("ry", 2)
-      .attr(
-        "x",
-        (d) =>
-          d3.timeWeek.count(
-            d3.timeWeek.floor(firstDay),
-            d3.timeWeek.floor(d.date)
-          ) *
-          (cellSize + cellPad)
-      )
-      .attr("y", (d) => d.date.getDay() * (cellSize + cellPad))
-      .attr("fill", (d) => color(d.value))
-      .attr("stroke", "rgba(0,0,0,0.06)");
+  chartGroup
+    .selectAll(".calendar-day-label")
+    .data(dayLabels)
+    .enter()
+    .append("text")
+    .attr("class", "calendar-day-label")
+    .attr("x", -10)
+    .attr("y", (d, i) => i * cellSize + cellSize / 2)
+    .attr("text-anchor", "end")
+    .attr("dominant-baseline", "middle")
+    .text((d) => d);
 
-    cells
-      .append("title")
-      .text(
-        (d) => `${fmtISO(d.date)} — ${d.value} event${d.value === 1 ? "" : "s"}`
-      );
-  });
-}
+  const monthFormat = d3.timeFormat("%b");
+
+  const months = d3.timeMonths(
+    d3.timeMonth.floor(startDate),
+    d3.timeMonth.offset(maxDate, 1),
+  );
+
+  chartGroup
+    .selectAll(".calendar-month-label")
+    .data(months)
+    .enter()
+    .append("text")
+    .attr("class", "calendar-month-label")
+    .attr("x", (d) => d3.timeWeek.count(startDate, d) * cellSize)
+    .attr("y", -10)
+    .attr("text-anchor", "start")
+    .text((d) => monthFormat(d));
+
+  const yearFormat = d3.timeFormat("%Y");
+
+  const years = d3.timeYears(
+    d3.timeYear.floor(startDate),
+    d3.timeYear.offset(maxDate, 1),
+  );
+
+  chartGroup
+    .selectAll(".calendar-year-label")
+    .data(years)
+    .enter()
+    .append("text")
+    .attr("class", "calendar-year-label")
+    .attr("x", (d) => d3.timeWeek.count(startDate, d) * cellSize)
+    .attr("y", chartHeight + 24)
+    .attr("text-anchor", "start")
+    .text((d) => yearFormat(d));
+};
