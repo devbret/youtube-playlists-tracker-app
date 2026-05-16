@@ -201,10 +201,10 @@ document.addEventListener("DOMContentLoaded", async function () {
       const filledDeleteCounts = fillMissingDates(deleteCounts);
       const filledSearchCounts = fillMissingDates(searchCounts);
       const filledAccessedAnalyticsCounts = fillMissingDates(
-        accessedAnalyticsCounts
+        accessedAnalyticsCounts,
       );
       const filledAccessedNetworkGraphCounts = fillMissingDates(
-        accessedNetworkGraphCounts
+        accessedNetworkGraphCounts,
       );
 
       const filledDailyEventCounts = fillMissingDates(dailyEventCounts);
@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         "#scatterPlot",
         "",
         "orange",
-        "grey"
+        "grey",
       );
       createWordCloud(searchQueries, "#wordCloud");
       createBarChart(hourCounts, "#hourlyActions", "", "blue");

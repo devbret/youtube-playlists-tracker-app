@@ -4,7 +4,7 @@ export const createScatterPlot = (
   elementId,
   title,
   color1,
-  color2
+  color2,
 ) => {
   const aggregatedData1 = Object.keys(data1).map((date) => ({
     date: new Date(date),
