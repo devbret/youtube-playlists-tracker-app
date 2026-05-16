@@ -2,11 +2,17 @@
 
 ![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/abe9a12e-1e93-423a-bbcf-8a437350b73a.png)
 
-Manages a JSON-based video game playlist library through CRUD API endpoints, serves frontend pages and data files and logs requests, responses, searches and playlist activity for analytics and querying.
+Manage a video game playlist library with `Flask` APIs, frontend playlist controls, D3 network graph and activity logging which powers usage analytics and playlist history queries.
+
+## Overview
+
+The `Flask` backend stores playlist data in a local `playlists.json` file, exposes API routes and records app activity in `app_log.csv`. It also serves the playlist view, network graph and analytics dashboard while logging key actions such as page visits, searches, playlist additions and response statuses.
+
+The frontend fetches `.json` data, groups and renders playlists, assigns each game a color and lets users open every playlist in a group at once. The analytics dashboard then transforms the `.csv` log data into multiple D3 visualizations, including bar charts, a word cloud, an activity heatmap and more. And the network graph adds an interactive view which connects video game nodes to YouTuber nodes.
 
 ## Set Up Instructions
 
-Below are the required software programs and steps for installing and using this application.
+Below are the required software programs and steps for installing and using this application on a Linux machine.
 
 ### Programs Needed
 
@@ -20,21 +26,23 @@ Below are the required software programs and steps for installing and using this
 
 2. Open a terminal
 
-3. Clone this repository using `git` by running the following command: `git clone git@github.com:devbret/youtube-playlists-tracker-app.git`
+3. Clone this repository: `git clone git@github.com:devbret/youtube-playlists-tracker-app.git`
 
-4. Navigate to the repo's directory by running: `cd youtube-playlists-tracker-app`
+4. Navigate to the repo's directory: `cd youtube-playlists-tracker-app`
 
-5. Install the needed dependencies for running the script by running: `pip install -r requirements.txt`
+5. Create a virtual environment: `python3 -m venv venv`
 
-6. Run the script with the command: `python3 app.py`
+6. Activate your virtual environment: `source venv/bin/activate`
 
-7. After the Flask server has started, visit [this link](http://127.0.0.1:5500/) in a browser, and you will be brought to the live application
+7. Install the needed dependencies: `pip install -r requirements.txt`
 
-8. Enter details for a favorite playlist into the four fields at the top of the program, and press the "Add Playlist" button
+8. Run the primary script: `python3 app.py`
 
-9. You can now see a collection of playlists, auto-populating on the screen
+9. Open the app frontend via your browser: `http://127.0.0.1:5500`
 
-10. These entries can be filtered via the search bar at the top left of your screen
+10. When finished using the app: `CTRL + C`
+
+11. Exit the virtual environment: `deactivate`
 
 ## Video Game Activity
 
@@ -54,6 +62,20 @@ You will notice while using the application, each basic interaction is logged in
 
 There is also an interactive network graph for exploring connections among your saved playlist categories and individual YouTubers. This utility is helpful for quickly understanding how playlist categories and gamers relate to each other.
 
-## Other Thoughts
+## Other Considerations
+
+This project repo is intended to demonstrate an ability to do the following:
+
+- Provide a CRUD system for storing, organizing, updating and deleting video game playlist records from a local `.json` file
+
+- Offer users an interactive frontend for browsing playlists by game and managing entries
+
+- Visualize playlist relationships through a D3 network graph which connects video games with associated YouTubers
+
+- Convert activity logs into dashboards to reveal app usage patterns, search activity, request distributions and playlist changes over time
+
+If you have any questions or would like to collaborate, please reach out either on GitHub or via [my website](https://bretbernhoft.com/).
+
+### Intended Use And Beyond
 
 The intended use of this program is for collecting and tracking the user's viewing progress with video game playthroughs on YouTube. Which are almost always organized as linkable playlists. But one could feasibly use this application to curate any variety of categorized linkable hypermedia.
