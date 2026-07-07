@@ -1,4 +1,3 @@
-// Imports
 import { createGraph } from "./visualizations/graph.js";
 import { createScatterPlot } from "./visualizations/scatterplot.js";
 import { createWordCloud } from "./visualizations/wordcloud.js";
@@ -10,13 +9,10 @@ import { createPieChart } from "./visualizations/piechart.js";
 import { createCalendarHeatmap } from "./visualizations/calendarheatmap.js";
 import { fillMissingDates } from "../utilities/fillmissingdates.js";
 
-// API Calls
 document.addEventListener("DOMContentLoaded", async function () {
-  // First API Call
   await d3
     .csv("/data/app_log.csv")
     .then(function (data) {
-      // Main Variables
       const dateCounts = {};
       const getCounts = {};
       const youtuberCounts = {};
@@ -41,19 +37,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const dailyEventCounts = {};
 
-      // Data Processing
       data.forEach((row) => {
-        // Processing Variables
         const { Timestamp, Time, Message } = row;
 
-        // Normalize date string (YYYY-MM-DD)
         const dateStr = (Timestamp || "").trim();
         if (dateStr) {
           if (!dailyEventCounts[dateStr]) dailyEventCounts[dateStr] = 0;
           dailyEventCounts[dateStr]++;
         }
 
-        // First Stage
         if (Timestamp && Time) {
           const date = new Date(Timestamp);
           const dayOfWeek = date.toLocaleString("en-us", { weekday: "long" });
@@ -66,7 +58,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           hourlyData[key]++;
         }
 
-        // Second Stage
         if (Timestamp) {
           const date = new Date(Timestamp.split(",")[0]);
           const dayOfWeek = date.getDay();
@@ -96,7 +87,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           }
         }
 
-        // Third Stage
         if (Time && Message) {
           const hour = Time.split(":")[0];
 
@@ -176,7 +166,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           }
         }
 
-        // Fourth Stage
         if (Message) {
           if (Message.includes("Incoming request: GET")) {
             requestCounts.GET++;
@@ -193,7 +182,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       });
 
-      // Representing Empty Dates
       const filledDateCounts = fillMissingDates(dateCounts);
       const filledGetCounts = fillMissingDates(getCounts);
       const filledYoutuberCounts = fillMissingDates(youtuberCounts);
@@ -209,26 +197,27 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const filledDailyEventCounts = fillMissingDates(dailyEventCounts);
 
-      // Creating Visualizations
-      createGraph(filledDateCounts, "#graph1", "", "steelblue");
-      createGraph(filledGetCounts, "#graph3", "", "red");
-      createGraph(filledYoutuberCounts, "#graph4", "", "purple");
-      createGraph(filledUpdateCounts, "#graph5", "", "orange");
-      createGraph(filledDeleteCounts, "#graph6", "", "grey");
-      createGraph(filledSearchCounts, "#graph7", "", "magenta");
-      createGraph(filledAccessedAnalyticsCounts, "#graph8", "", "aqua");
-      createGraph(filledAccessedNetworkGraphCounts, "#graph9", "", "lime");
+      createGraph(filledDateCounts, "#graph1", "", "#007bff");
+      createGraph(filledGetCounts, "#graph3", "", "#007bff");
+      createGraph(filledYoutuberCounts, "#graph4", "", "#007bff");
+      createGraph(filledUpdateCounts, "#graph5", "", "#007bff");
+      createGraph(filledDeleteCounts, "#graph6", "", "#007bff");
+      createGraph(filledSearchCounts, "#graph7", "", "#007bff");
+      createGraph(filledAccessedAnalyticsCounts, "#graph8", "", "#007bff");
+      createGraph(filledAccessedNetworkGraphCounts, "#graph9", "", "#007bff");
       createScatterPlot(
         updateCounts,
         deleteCounts,
         "#scatterPlot",
         "",
-        "orange",
-        "grey",
+        "#007bff",
+        "#eb6834",
+        "Updates",
+        "Deletions",
       );
       createWordCloud(searchQueries, "#wordCloud");
-      createBarChart(hourCounts, "#hourlyActions", "", "blue");
-      createBarChartTwo(dayCounts, "#weeklyActions", "", "blue");
+      createBarChart(hourCounts, "#hourlyActions", "", "#007bff");
+      createBarChartTwo(dayCounts, "#weeklyActions", "", "#007bff");
       createActivityHeatmap(hourlyData, "#activityHeatmap");
       createPieChart(requestCounts, "#requestPieChart", "");
 
@@ -238,14 +227,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.error("Error fetching or parsing data:", error);
     });
 
-  // Second API Call
   await d3
-    .json("/api/playlists.json")
+    .json("/api/playlists")
     .then(function (data) {
-      // Main Variables
       const youtuberPlaylistsMap = new Map();
 
-      // Data Processing
       data.playlists.forEach((d) => {
         if (!youtuberPlaylistsMap.has(d.youtuber)) {
           youtuberPlaylistsMap.set(d.youtuber, {
@@ -264,7 +250,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         .sort((a, b) => b.count - a.count)
         .slice(0, 23);
 
-      // Creating Visualizations
       createHorizontalBarChart(youtuberData);
     })
     .catch(function (error) {

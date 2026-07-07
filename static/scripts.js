@@ -1,4 +1,3 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import { fillMissingDates } from "./utilities/fillmissingdates.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,7 +15,15 @@ document.addEventListener("DOMContentLoaded", () => {
       updatePlaylistCount();
       updateGameCount();
     })
-    .catch((error) => console.error("Error fetching playlists:", error));
+    .catch((error) => {
+      console.error("Error fetching playlists:", error);
+      const playlistsDiv = document.getElementById("playlists");
+      playlistsDiv.innerHTML = "";
+      const message = document.createElement("p");
+      message.className = "status-message";
+      message.textContent = "Failed to load playlists. Is the server running?";
+      playlistsDiv.appendChild(message);
+    });
 
   document
     .getElementById("addPlaylistForm")
@@ -40,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            playlistsArray.push(newPlaylist);
+            playlistsArray.push(data.playlist);
             playlistsArray.sort((a, b) => {
               if (a.game.localeCompare(b.game) === 0) {
                 return a.youtuber.localeCompare(b.youtuber);
@@ -52,6 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
             clearForm();
             updatePlaylistCount();
             updateGameCount();
+          } else {
+            console.error("Error adding playlist:", data.error);
           }
         })
         .catch((error) => console.error("Error adding playlist:", error));
@@ -79,21 +88,139 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 430);
   });
 
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "c" || event.ctrlKey || event.metaKey || event.altKey) {
+      return;
+    }
+    const hoveredLink = document.querySelector(".playlist-link:hover");
+    if (!hoveredLink) {
+      return;
+    }
+    navigator.clipboard
+      .writeText(hoveredLink.href)
+      .then(() => {
+        console.log(`Copied URL to clipboard: ${hoveredLink.href}`);
+      })
+      .catch((err) => {
+        console.error("Failed to copy URL to clipboard", err);
+      });
+  });
+
   function assignColors(playlists) {
     const uniqueGames = [
       ...new Set(playlists.map((playlist) => playlist.game)),
     ];
-    shuffleArray(uniqueGames);
+    const GOLDEN_RATIO = 0.618033988749895;
+    const lightnessSteps = [44, 36, 50];
     uniqueGames.forEach((game, index) => {
-      colorMap[game] = `hsl(${(index * 360) / uniqueGames.length}, 70%, 70%)`;
+      let hue = ((index * GOLDEN_RATIO) % 1) * 315;
+      if (hue > 45) {
+        hue += 45;
+      }
+      const lightness = lightnessSteps[index % lightnessSteps.length];
+      colorMap[game] = `hsl(${hue.toFixed(1)}, 95%, ${lightness}%)`;
     });
   }
 
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+  const collapsedLetters = new Set();
+  const LETTERS = ["#", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+
+  function letterFor(game) {
+    const first = game.charAt(0).toUpperCase();
+    return first >= "A" && first <= "Z" ? first : "#";
+  }
+
+  function sectionId(letter) {
+    return letter === "#" ? "letter-num" : `letter-${letter}`;
+  }
+
+  function createLetterSection(letter, filter) {
+    const section = document.createElement("section");
+    section.className = "letter-section";
+    section.id = sectionId(letter);
+    section.dataset.letter = letter;
+    if (!filter && collapsedLetters.has(letter)) {
+      section.classList.add("collapsed");
     }
+
+    const header = document.createElement("button");
+    header.type = "button";
+    header.className = "letter-header";
+
+    const chevron = document.createElement("span");
+    chevron.className = "letter-chevron";
+    chevron.textContent = "▾";
+    const title = document.createElement("span");
+    title.className = "letter-title";
+    title.textContent = letter;
+    const countSpan = document.createElement("span");
+    countSpan.className = "letter-count";
+    header.append(chevron, title, countSpan);
+
+    header.addEventListener("click", () => {
+      if (section.classList.toggle("collapsed")) {
+        collapsedLetters.add(letter);
+      } else {
+        collapsedLetters.delete(letter);
+      }
+      updateActiveLetter();
+    });
+
+    const games = document.createElement("div");
+    games.className = "letter-games";
+
+    section.append(header, games);
+    return { section, games, countSpan };
+  }
+
+  function renderLetterNav(availableLetters) {
+    const linksDiv = document.getElementById("letter-links");
+    linksDiv.innerHTML = "";
+    LETTERS.forEach((letter) => {
+      const link = document.createElement("button");
+      link.type = "button";
+      link.className = "letter-link";
+      link.textContent = letter;
+      if (availableLetters.has(letter)) {
+        link.addEventListener("click", () => jumpToLetter(letter));
+      } else {
+        link.disabled = true;
+      }
+      linksDiv.appendChild(link);
+    });
+  }
+
+  function updateActiveLetter() {
+    const sections = document.querySelectorAll(".letter-section");
+    const links = document.querySelectorAll(".letter-link");
+    if (sections.length === 0) {
+      links.forEach((link) => link.classList.remove("active"));
+      return;
+    }
+    const headerHeight = document.querySelector("header").offsetHeight;
+    let current = sections[0];
+    sections.forEach((section) => {
+      if (section.getBoundingClientRect().top <= headerHeight + 12) {
+        current = section;
+      }
+    });
+    const activeLetter = current.dataset.letter;
+    links.forEach((link) => {
+      link.classList.toggle("active", link.textContent === activeLetter);
+    });
+  }
+
+  function jumpToLetter(letter) {
+    const section = document.getElementById(sectionId(letter));
+    if (!section) {
+      return;
+    }
+    section.classList.remove("collapsed");
+    collapsedLetters.delete(letter);
+    const headerHeight = document.querySelector("header").offsetHeight;
+    const top =
+      section.getBoundingClientRect().top + window.scrollY - headerHeight - 10;
+    window.scrollTo({ top, behavior: "smooth" });
   }
 
   function displayPlaylists(playlists, filter = "") {
@@ -115,7 +242,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    const letterSections = {};
+
     Object.keys(gameMap).forEach((game) => {
+      const letter = letterFor(game);
+      if (!letterSections[letter]) {
+        letterSections[letter] = createLetterSection(letter, filter);
+        playlistsDiv.appendChild(letterSections[letter].section);
+      }
+
       const gameDiv = document.createElement("div");
       gameDiv.className = "game-group";
 
@@ -124,7 +259,10 @@ document.addEventListener("DOMContentLoaded", () => {
       gameDiv.appendChild(gameDivHeaderDiv);
 
       const gameColor = colorMap[game];
-      gameDivHeaderDiv.innerHTML = `<h2 style="color: ${gameColor}; text-shadow: 1px 1px black;">${game}</h2>`;
+      const gameHeading = document.createElement("h2");
+      gameHeading.style.color = gameColor;
+      gameHeading.textContent = game;
+      gameDivHeaderDiv.appendChild(gameHeading);
 
       const viewLogsButton = document.createElement("button");
       viewLogsButton.textContent = "View Activity";
@@ -137,9 +275,17 @@ document.addEventListener("DOMContentLoaded", () => {
       openAllButton.textContent = `Open ${playlistCount} Playlists`;
       openAllButton.classList.add("open-all-button");
       openAllButton.onclick = () => {
+        let blockedCount = 0;
         gameMap[game].forEach((playlist) => {
-          window.open(playlist.link, "_blank");
+          if (!window.open(playlist.link, "_blank")) {
+            blockedCount++;
+          }
         });
+        if (blockedCount > 0) {
+          alert(
+            `Your browser blocked ${blockedCount} of ${playlistCount} playlist tabs. Allow popups for this site to open them all at once.`,
+          );
+        }
       };
       gameDivHeaderDiv.appendChild(openAllButton);
 
@@ -156,49 +302,60 @@ document.addEventListener("DOMContentLoaded", () => {
       gameMap[game].forEach((playlist) => {
         const playlistDiv = document.createElement("div");
         playlistDiv.className = "playlist";
-        playlistDiv.innerHTML = `
-          <button class="delete-btn" data-index="${playlists.indexOf(
-            playlist,
-          )}">X</button>
-          <p>
-            <a href="${
-              playlist.link
-            }" target="_blank" class="playlist-link" style="color: ${gameColor}; text-shadow: 1px 1px black;">
-              ${playlist.youtuber}
-            </a>
-          </p>
-          <p> - #<span class="video-number" data-index="${playlists.indexOf(
-            playlist,
-          )}">${playlist.video_number}</span></p>
-        `;
 
-        const playlistLink = playlistDiv.querySelector(".playlist-link");
-        let isHovering = false;
-        playlistLink.addEventListener("mouseover", () => {
-          isHovering = true;
-        });
-        playlistLink.addEventListener("mouseout", () => {
-          isHovering = false;
-        });
-        document.addEventListener("keydown", (event) => {
-          if (isHovering && event.key === "c") {
-            navigator.clipboard
-              .writeText(playlistLink.href)
-              .then(() => {
-                console.log(`Copied URL to clipboard: ${playlistLink.href}`);
-              })
-              .catch((err) => {
-                console.error("Failed to copy URL to clipboard", err);
-              });
-          }
-        });
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-btn";
+        deleteButton.dataset.id = playlist.id;
+        deleteButton.textContent = "X";
+        deleteButton.setAttribute(
+          "aria-label",
+          `Delete ${playlist.youtuber} playlist for ${game}`,
+        );
+        playlistDiv.appendChild(deleteButton);
+
+        const linkParagraph = document.createElement("p");
+        const playlistLink = document.createElement("a");
+        playlistLink.href = playlist.link;
+        playlistLink.target = "_blank";
+        playlistLink.rel = "noopener";
+        playlistLink.className = "playlist-link";
+        playlistLink.style.color = gameColor;
+        playlistLink.textContent = playlist.youtuber;
+        linkParagraph.appendChild(playlistLink);
+        playlistDiv.appendChild(linkParagraph);
+
+        const numberParagraph = document.createElement("p");
+        numberParagraph.append(" - ");
+        const videoNumberSpan = document.createElement("span");
+        videoNumberSpan.className = "video-number";
+        videoNumberSpan.dataset.id = playlist.id;
+        videoNumberSpan.textContent = playlist.video_number;
+        numberParagraph.appendChild(videoNumberSpan);
+        playlistDiv.appendChild(numberParagraph);
 
         playlistsInnerDiv.appendChild(playlistDiv);
         visibleCount++;
       });
 
-      playlistsDiv.appendChild(gameDiv);
+      letterSections[letter].games.appendChild(gameDiv);
     });
+
+    Object.values(letterSections).forEach(({ games, countSpan }) => {
+      const gameCount = games.children.length;
+      countSpan.textContent = `${gameCount} game${gameCount === 1 ? "" : "s"}`;
+    });
+
+    if (visibleCount === 0) {
+      const message = document.createElement("p");
+      message.className = "status-message";
+      message.textContent = filter
+        ? `No playlists match "${filter}".`
+        : "No playlists yet. Add your first one above.";
+      playlistsDiv.appendChild(message);
+    }
+
+    renderLetterNav(new Set(Object.keys(letterSections)));
+    updateActiveLetter();
 
     document.getElementById("total-playlists").textContent = visibleCount;
     updateGameCount();
@@ -220,9 +377,6 @@ document.addEventListener("DOMContentLoaded", () => {
           logs.forEach((log) => {
             const date = log.timestamp;
             counts[date] = (counts[date] || 0) + 1;
-          });
-          Object.keys(counts).forEach((date) => {
-            counts[date] = counts[date] / 2;
           });
           const chartData = Object.keys(counts).map((date) => ({
             date,
@@ -285,6 +439,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderLineGraph(data, selector) {
+    const container = d3.select(selector).html("");
+
+    if (data.length === 0) {
+      container
+        .append("p")
+        .attr("class", "status-message")
+        .text("No activity recorded for this game yet.");
+      return;
+    }
+
     const counts = {};
     data.forEach((d) => {
       counts[d.date] = d.count;
@@ -300,19 +464,22 @@ document.addEventListener("DOMContentLoaded", () => {
       width = 870 - margin.left - margin.right,
       height = 300 - margin.top - margin.bottom;
 
-    const svg = d3
-      .select(selector)
-      .html("")
+    const svg = container
       .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    const x = d3
-      .scaleTime()
-      .domain(d3.extent(lineData, (d) => d.date))
-      .range([0, width]);
+    let xDomain = d3.extent(lineData, (d) => d.date);
+    if (xDomain[0].getTime() === xDomain[1].getTime()) {
+      xDomain = [
+        d3.timeDay.offset(xDomain[0], -1),
+        d3.timeDay.offset(xDomain[1], 1),
+      ];
+    }
+
+    const x = d3.scaleTime().domain(xDomain).range([0, width]);
 
     const y = d3
       .scaleLinear()
@@ -325,7 +492,14 @@ document.addEventListener("DOMContentLoaded", () => {
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(x));
 
-    svg.append("g").call(d3.axisLeft(y));
+    svg
+      .append("g")
+      .call(
+        d3
+          .axisLeft(y)
+          .tickValues(y.ticks().filter(Number.isInteger))
+          .tickFormat(d3.format("d")),
+      );
 
     const line = d3
       .line()
@@ -340,6 +514,16 @@ document.addEventListener("DOMContentLoaded", () => {
       .attr("stroke", "steelblue")
       .attr("stroke-width", 2)
       .attr("d", line);
+
+    svg
+      .selectAll("circle")
+      .data(lineData)
+      .enter()
+      .append("circle")
+      .attr("r", 3)
+      .attr("cx", (d) => x(d.date))
+      .attr("cy", (d) => y(d.count))
+      .attr("fill", "steelblue");
   }
 
   function deleteAllPlaylists(game, gameDiv) {
@@ -375,9 +559,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!confirm("Are you sure you want to delete this playlist?")) {
           return;
         }
-        const index = event.target.getAttribute("data-index");
+        const id = event.target.getAttribute("data-id");
         const playlistDiv = event.target.closest(".playlist");
-        deletePlaylist(index, playlistDiv);
+        deletePlaylist(id, playlistDiv);
       });
     });
 
@@ -415,7 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        const index = target.getAttribute("data-index");
+        const id = target.getAttribute("data-id");
         const currentNumber = target.textContent;
 
         const input = document.createElement("input");
@@ -428,7 +612,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input.addEventListener("blur", () => {
           const newVideoNumber = input.value || 1;
-          updateVideoNumber(index, newVideoNumber);
+          updateVideoNumber(id, newVideoNumber);
           target.textContent = newVideoNumber;
 
           target.style.display = "inline";
@@ -472,8 +656,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("total-youtubers").textContent =
       uniqueYouTubers.length;
   }
-  function updateVideoNumber(index, newVideoNumber) {
-    fetch(`/api/playlists/${index}`, {
+  function updateVideoNumber(id, newVideoNumber) {
+    fetch(`/api/playlists/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -482,15 +666,20 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (!data.success) {
+        if (data.success) {
+          const playlist = playlistsArray.find((p) => p.id === id);
+          if (playlist) {
+            playlist.video_number = data.playlist.video_number;
+          }
+        } else {
           console.error("Error updating video number:", data.error);
         }
       })
       .catch((error) => console.error("Error updating video number:", error));
   }
 
-  function deletePlaylist(index, element) {
-    fetch(`/api/playlists/${index}`, {
+  function deletePlaylist(id, element) {
+    fetch(`/api/playlists/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -501,9 +690,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.success) {
           element.remove();
           playlistsArray = playlistsArray.filter(
-            (playlist, idx) => idx !== parseInt(index),
+            (playlist) => playlist.id !== id,
           );
-          updateIndices();
           updatePlaylistCount();
           updateGameCount();
         } else {
@@ -511,17 +699,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       })
       .catch((error) => console.error("Error deleting playlist:", error));
-  }
-
-  function updateIndices() {
-    document.querySelectorAll(".playlist").forEach((playlistDiv, index) => {
-      playlistDiv
-        .querySelector(".delete-btn")
-        .setAttribute("data-index", index);
-      playlistDiv
-        .querySelector(".video-number")
-        .setAttribute("data-index", index);
-    });
   }
 
   document.getElementById("scrollToTop").addEventListener("click", function () {
@@ -535,11 +712,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function throttle(fn, wait) {
     let lastTime = 0;
+    let trailing;
     return function (...args) {
-      const now = new Date().getTime();
+      const now = Date.now();
+      clearTimeout(trailing);
       if (now - lastTime >= wait) {
         fn.apply(this, args);
         lastTime = now;
+      } else {
+        trailing = setTimeout(
+          () => {
+            fn.apply(this, args);
+            lastTime = Date.now();
+          },
+          wait - (now - lastTime),
+        );
       }
     };
   }
@@ -554,19 +741,11 @@ document.addEventListener("DOMContentLoaded", () => {
     progressBar.style.width = scrollPercentage + "%";
   }
 
-  document.addEventListener("scroll", throttle(updateProgressBar, 50));
-
-  function centerProgressBar() {
-    const progressBarContainer = document.getElementById(
-      "progress-bar-container",
-    );
-    const containerWidth = progressBarContainer.offsetWidth;
-    const viewportWidth = document.documentElement.clientWidth;
-
-    const leftOffset = (viewportWidth - containerWidth) / 2;
-    progressBarContainer.style.left = `${leftOffset}px`;
-  }
-
-  centerProgressBar();
-  window.addEventListener("resize", centerProgressBar);
+  document.addEventListener(
+    "scroll",
+    throttle(() => {
+      updateProgressBar();
+      updateActiveLetter();
+    }, 50),
+  );
 });

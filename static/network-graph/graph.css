@@ -5,44 +5,61 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
   background: white;
-}
-
-.legend {
-  background-color: white;
+  color: #222;
 }
 
 .links line {
-  stroke: #999;
+  stroke: #c5c5c5;
   stroke-opacity: 0.6;
 }
 
-.nodes circle {
-  stroke: #000;
-  stroke-width: 3px;
+.links line.highlight {
+  stroke: #555;
+  stroke-opacity: 1;
 }
 
-.text {
+.nodes circle {
+  stroke: white;
+  stroke-width: 2px;
+}
+
+.nodes circle.highlight {
+  stroke: #222;
+}
+
+.labels text {
   font-size: 12px;
+  fill: #555;
+}
+
+.legend text {
+  font-size: 13px;
+  fill: #555;
 }
 
 .tooltip {
   position: absolute;
   text-align: center;
   height: auto;
-  padding: 2px;
-  font-size: 16px;
-  background: lightsteelblue;
-  border: 0px;
+  padding: 6px 8px;
+  font-size: 14px;
+  color: #222;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s;
-}
-
-.highlight {
-  stroke: yellow;
-  stroke-width: 2px;
 }
 
 .dimmed {
@@ -53,18 +70,15 @@ body {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  padding: 10px 20px;
+  padding: 5px 10px;
   background-color: white;
-  color: black;
+  color: #007bff;
   text-decoration: none;
   border: 1px solid black;
   border-radius: 5px;
-  font-family: Arial, sans-serif;
 }
 
 #homeLink:hover {
-  background-color: black;
-  color: white;
-  border-color: white;
-  color: aqua;
+  background-color: #e8f1ff;
+  color: #0056b3;
 }

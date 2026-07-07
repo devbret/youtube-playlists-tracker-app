@@ -32,6 +32,12 @@ export const createGraph = (data, elementId, title, color) => {
     .x((d) => x(d.date))
     .y((d) => y(d.count));
 
+  const area = d3
+    .area()
+    .x((d) => x(d.date))
+    .y0(height)
+    .y1((d) => y(d.count));
+
   svg
     .append("g")
     .attr("transform", `translate(0,${height})`)
@@ -42,20 +48,32 @@ export const createGraph = (data, elementId, title, color) => {
   svg
     .append("path")
     .datum(aggregatedData)
-    .attr("fill", "none")
-    .attr("stroke", color)
-    .attr("stroke-width", 1.5)
-    .attr("d", line);
+    .attr("fill", color)
+    .attr("fill-opacity", 0.08)
+    .attr("d", area);
 
   svg
-    .selectAll("dot")
-    .data(aggregatedData)
-    .enter()
-    .append("circle")
-    .attr("r", 5)
-    .attr("cx", (d) => x(d.date))
-    .attr("cy", (d) => y(d.count))
-    .attr("fill", color);
+    .append("path")
+    .datum(aggregatedData)
+    .attr("fill", "none")
+    .attr("stroke", color)
+    .attr("stroke-width", 2)
+    .attr("stroke-linejoin", "round")
+    .attr("stroke-linecap", "round")
+    .attr("d", line);
+
+  const lastPoint = aggregatedData[aggregatedData.length - 1];
+
+  if (lastPoint) {
+    svg
+      .append("circle")
+      .attr("r", 4)
+      .attr("cx", x(lastPoint.date))
+      .attr("cy", y(lastPoint.count))
+      .attr("fill", color)
+      .attr("stroke", "#fafafa")
+      .attr("stroke-width", 2);
+  }
 
   svg
     .append("text")
@@ -63,6 +81,5 @@ export const createGraph = (data, elementId, title, color) => {
     .attr("y", 0 - margin.top / 2)
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
-    .style("text-decoration", "underline")
     .text(title);
 };
