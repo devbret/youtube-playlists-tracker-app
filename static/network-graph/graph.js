@@ -32,7 +32,7 @@ const simulation = d3
   .force("charge", d3.forceManyBody().strength(-400))
   .force("center", d3.forceCenter(width / 2, height / 2));
 
-d3.json("/api/playlists.json")
+d3.json("/api/playlists")
   .then(function (data) {
     const nodes = [];
     const links = [];
@@ -61,8 +61,7 @@ d3.json("/api/playlists.json")
       .data(graph.links)
       .enter()
       .append("line")
-      .attr("stroke-width", 2)
-      .attr("stroke", "#ccc");
+      .attr("stroke-width", 2);
 
     const node = container
       .append("g")
@@ -72,7 +71,7 @@ d3.json("/api/playlists.json")
       .enter()
       .append("circle")
       .attr("r", 10)
-      .attr("fill", (d) => (d.type === "game" ? "aqua" : "magenta"))
+      .attr("fill", (d) => (d.type === "game" ? "#007bff" : "#eb6834"))
       .call(
         d3
           .drag()
@@ -195,8 +194,8 @@ d3.json("/api/playlists.json")
     }
 
     const legendData = [
-      { label: "Video Game", color: "aqua" },
-      { label: "YouTuber", color: "magenta" },
+      { label: "Video Game", color: "#007bff" },
+      { label: "YouTuber", color: "#eb6834" },
     ];
 
     const legend = svg
@@ -206,24 +205,23 @@ d3.json("/api/playlists.json")
 
     legend
       .append("rect")
-      .attr("x", -10)
-      .attr("y", -10)
-      .attr("width", 160)
-      .attr("height", 65)
-      .attr("fill", "white")
-      .attr("stroke", "black")
+      .attr("x", -12)
+      .attr("y", -12)
+      .attr("width", 150)
+      .attr("height", 58)
+      .attr("rx", 8)
+      .attr("fill", "#fafafa")
+      .attr("stroke", "#ececec")
       .attr("stroke-width", 1);
 
     legend
-      .selectAll("rect.legend-color")
+      .selectAll("circle")
       .data(legendData)
       .enter()
-      .append("rect")
-      .attr("class", "legend-color")
-      .attr("x", 0)
-      .attr("y", (d, i) => i * 25)
-      .attr("width", 18)
-      .attr("height", 18)
+      .append("circle")
+      .attr("cx", 6)
+      .attr("cy", (d, i) => i * 22 + 5)
+      .attr("r", 5)
       .attr("fill", (d) => d.color);
 
     legend
@@ -231,29 +229,15 @@ d3.json("/api/playlists.json")
       .data(legendData)
       .enter()
       .append("text")
-      .attr("x", 25)
-      .attr("y", (d, i) => i * 25 + 14)
-      .text((d) => d.label)
-      .attr("fill", "#333")
-      .style("font-size", "14px")
-      .style("font-family", "Arial, sans-serif")
-      .style("font-weight", "bold");
+      .attr("x", 20)
+      .attr("y", (d, i) => i * 22 + 9)
+      .text((d) => d.label);
 
     const homeLink = d3
       .select("body")
       .append("a")
       .attr("href", "/")
       .attr("id", "homeLink")
-      .style("position", "fixed")
-      .style("bottom", "20px")
-      .style("left", "20px")
-      .style("padding", "10px 20px")
-      .style("background-color", "white")
-      .style("color", "black")
-      .style("text-decoration", "none")
-      .style("border", "1px solid black")
-      .style("border-radius", "5px")
-      .style("font-family", "Arial, sans-serif")
       .text("Home");
   })
   .catch(function (error) {

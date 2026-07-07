@@ -72,9 +72,15 @@
         <p><b>Total YouTubers:</b> <span id="total-youtubers"></span></p>
         <p><b>Total Games:</b> <span id="total-games"></span></p>
       </div>
+
+      <nav id="letter-nav" aria-label="Jump to games by letter">
+        <div id="letter-links"></div>
+      </nav>
     </header>
 
-    <div id="playlists"></div>
+    <div id="playlists">
+      <p class="status-message">Loading playlists&hellip;</p>
+    </div>
 
     <div id="scrollToTop">To Top</div>
 
@@ -83,6 +89,7 @@
       <p id="analyticsPara"><a href="/analytics">Usage Analytics</a></p>
     </div>
 
+    <script src="{{ url_for('static', filename='vendor/d3.v7.min.js') }}"></script>
     <script
       type="module"
       src="{{ url_for('static', filename='scripts.js') }}"

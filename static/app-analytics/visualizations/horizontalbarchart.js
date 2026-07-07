@@ -22,17 +22,27 @@ export const createHorizontalBarChart = function (data) {
     .range([0, height])
     .padding(0.1);
 
+  const barHeight = Math.min(y.bandwidth(), 24);
+
+  const roundedEndBar = (by, w, h) => {
+    const r = Math.min(4, h / 2, w);
+    return `M0,${by}H${w - r}Q${w},${by} ${w},${by + r}V${by + h - r}Q${w},${by + h} ${w - r},${by + h}H0Z`;
+  };
+
   svg
     .selectAll(".bar")
     .data(data)
     .enter()
-    .append("rect")
+    .append("path")
     .attr("class", "bar")
-    .attr("x", 0)
-    .attr("y", (d) => y(d.youtuber))
-    .attr("width", (d) => x(d.count))
-    .attr("height", y.bandwidth())
-    .attr("fill", "orange");
+    .attr("d", (d) =>
+      roundedEndBar(
+        y(d.youtuber) + (y.bandwidth() - barHeight) / 2,
+        x(d.count),
+        barHeight,
+      ),
+    )
+    .attr("fill", "#007bff");
 
   svg
     .append("g")

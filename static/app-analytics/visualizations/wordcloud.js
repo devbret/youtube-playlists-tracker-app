@@ -42,7 +42,7 @@ export const createWordCloud = (data, elementId) => {
       .enter()
       .append("text")
       .style("font-size", (d) => `${d.size}px`)
-      .style("fill", () => `hsl(${Math.random() * 360}, 100%, 50%)`)
+      .style("fill", (d) => (d.size >= 30 ? "#0056b3" : "#555"))
       .attr("text-anchor", "middle")
       .attr("transform", (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
       .text((d) => d.text);

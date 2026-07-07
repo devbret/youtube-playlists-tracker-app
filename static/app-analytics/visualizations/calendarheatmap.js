@@ -121,7 +121,7 @@ export const createCalendarHeatmap = (data, elementId) => {
       const dateKey = formatDate(d);
       const count = dateMap.get(dateKey) || 0;
 
-      return count === 0 ? "#eeeeee" : colorScale(count);
+      return count === 0 ? "#ececec" : colorScale(count);
     })
     .on("mouseover", function (event, d) {
       const dateKey = formatDate(d);

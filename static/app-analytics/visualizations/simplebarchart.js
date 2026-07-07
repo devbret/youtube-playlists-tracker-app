@@ -35,16 +35,27 @@ export const createBarChartTwo = (data, elementId, title, color) => {
 
   svg.append("g").call(d3.axisLeft(y));
 
+  const barWidth = Math.min(x.bandwidth(), 48);
+
+  const roundedTopBar = (bx, by, w, h) => {
+    const r = Math.min(4, w / 2, h);
+    return `M${bx},${by + h}V${by + r}Q${bx},${by} ${bx + r},${by}H${bx + w - r}Q${bx + w},${by} ${bx + w},${by + r}V${by + h}Z`;
+  };
+
   svg
     .selectAll(".bar")
     .data(aggregatedData)
     .enter()
-    .append("rect")
+    .append("path")
     .attr("class", "bar")
-    .attr("x", (d) => x(d.day))
-    .attr("y", (d) => y(d.count))
-    .attr("width", x.bandwidth())
-    .attr("height", (d) => height - y(d.count))
+    .attr("d", (d) =>
+      roundedTopBar(
+        x(d.day) + (x.bandwidth() - barWidth) / 2,
+        y(d.count),
+        barWidth,
+        height - y(d.count),
+      ),
+    )
     .attr("fill", color);
 
   svg
@@ -53,6 +64,5 @@ export const createBarChartTwo = (data, elementId, title, color) => {
     .attr("y", 0 - margin.top / 2)
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
-    .style("text-decoration", "underline")
     .text(title);
 };

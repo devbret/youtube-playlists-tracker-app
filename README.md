@@ -1,6 +1,6 @@
 # YouTube Playlists Tracker App
 
-![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/abe9a12e-1e93-423a-bbcf-8a437350b73a.png)
+![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/eb22d677-fc69-4aab-848c-602c0e5d6269.png)
 
 Manage a video game playlist library with `Flask` APIs, frontend playlist controls, D3 network graph and activity logging which powers usage analytics and playlist history queries.
 
@@ -46,19 +46,19 @@ Below are the required software programs and steps for installing and using this
 
 ## Video Game Activity
 
-![Total activity for a specific video game. In this case, it is "Skyrim".](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/4dedc977-afeb-4040-986d-a6f392e802da.png)
+![Total activity for a specific video game. In this case, it is "Skyrim".](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/bf46c18e-2f75-4bab-9e14-1ab1fedd1514.png)
 
 Each video game has a "View Activity" button, which displays the volume of relevant actions over time for a given game since being first added. These data visualizations are intended to help explore how frequently and when you engage with a particular video game.
 
 ## Application Usage Analytics
 
-![Sixteen different graphs, each displaying a unique metric.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/5e37ab17-5a60-4ae6-81c0-01e1728323f0.png)
+![Sixteen different graphs, each displaying a unique metric.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/a430c4f6-3b54-44c7-b0e5-99eb1059f6ac.png)
 
 You will notice while using the application, each basic interaction is logged in a local file named `app_log.csv`. This file powers 16 data analysis tools, intended to help users of the YouTube Playlists Tracker App discover their personal habits and preferences over time.
 
 ## Network Graph Feature
 
-![A visualization of the interconnections shared by each YouTuber and playlist category.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/8a157fad-0438-42c8-a6b1-e108ed785791.png)
+![A visualization of the interconnections shared by each YouTuber and playlist category.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/82b468c5-03e4-4ace-9c93-2216253da57a.png)
 
 There is also an interactive network graph for exploring connections among your saved playlist categories and individual YouTubers. This utility is helpful for quickly understanding how playlist categories and gamers relate to each other.
 

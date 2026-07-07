@@ -5,6 +5,8 @@ export const createScatterPlot = (
   title,
   color1,
   color2,
+  label1,
+  label2,
 ) => {
   const aggregatedData1 = Object.keys(data1).map((date) => ({
     date: new Date(date),
@@ -50,10 +52,12 @@ export const createScatterPlot = (
     .enter()
     .append("circle")
     .attr("class", "dot1")
-    .attr("r", 5)
+    .attr("r", 4)
     .attr("cx", (d) => x(d.date))
     .attr("cy", (d) => y(d.count))
-    .attr("fill", color1);
+    .attr("fill", color1)
+    .attr("stroke", "#fafafa")
+    .attr("stroke-width", 2);
 
   svg
     .selectAll(".dot2")
@@ -61,10 +65,35 @@ export const createScatterPlot = (
     .enter()
     .append("circle")
     .attr("class", "dot2")
-    .attr("r", 5)
+    .attr("r", 4)
     .attr("cx", (d) => x(d.date))
     .attr("cy", (d) => y(d.count))
-    .attr("fill", color2);
+    .attr("fill", color2)
+    .attr("stroke", "#fafafa")
+    .attr("stroke-width", 2);
+
+  const legendData = [
+    { label: label1 || "Series 1", color: color1 },
+    { label: label2 || "Series 2", color: color2 },
+  ];
+
+  const legend = svg
+    .append("g")
+    .attr("transform", `translate(${width - 110},4)`);
+
+  legendData.forEach((item, i) => {
+    const row = legend.append("g").attr("transform", `translate(0,${i * 20})`);
+
+    row.append("circle").attr("r", 5).attr("cy", 4).attr("fill", item.color);
+
+    row
+      .append("text")
+      .attr("x", 12)
+      .attr("y", 8)
+      .style("font-size", "13px")
+      .style("fill", "#555")
+      .text(item.label);
+  });
 
   svg
     .append("text")
@@ -72,6 +101,5 @@ export const createScatterPlot = (
     .attr("y", 0 - margin.top / 2)
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
-    .style("text-decoration", "underline")
     .text(title);
 };
