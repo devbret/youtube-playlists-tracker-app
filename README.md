@@ -1,6 +1,6 @@
 # YouTube Playlists Tracker App
 
-![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/eb22d677-fc69-4aab-848c-602c0e5d6269.png)
+![Organized YouTube playlists with counters for the next video to watch.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/5972e836-b037-48d5-970c-372781e217a1.png)
 
 Manage a video game playlist library with `Flask` APIs, frontend playlist controls, D3 network graph and activity logging which powers usage analytics and playlist history queries.
 
@@ -46,7 +46,7 @@ Below are the required software programs and steps for installing and using this
 
 ## Video Game Activity
 
-![Total activity for a specific video game. In this case, it is "Skyrim".](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/bf46c18e-2f75-4bab-9e14-1ab1fedd1514.png)
+![Total activity for a specific video game. In this case, it is "Skyrim".](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/053ac086-04d5-4497-b443-7f878021ca73.png)
 
 Each video game has a "View Activity" button, which displays the volume of relevant actions over time for a given game since being first added. These data visualizations are intended to help explore how frequently and when you engage with a particular video game.
 
