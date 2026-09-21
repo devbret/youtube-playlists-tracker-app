@@ -64,7 +64,7 @@ There is also an interactive network graph for exploring connections among your 
 
 ## Other Considerations
 
-Below you will find information not covered in the installation and use sections above. Including the abilities this repo is intended to demonstrate and information. As well as an overview of the license this code is made available with. And a way to contact the maintainer with questions, suggestions and collaboration opportunities.
+Below you will find information not covered in the installation and use sections above. Including the abilities this repo is intended to demonstrate. As well as an overview of the license this code is made available with. And a way to contact the maintainer with questions, suggestions and collaboration opportunities.
 
 ### Abilities Demonstrated
 

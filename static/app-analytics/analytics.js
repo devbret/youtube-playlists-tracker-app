@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         if (Timestamp && Time) {
-          const date = new Date(Timestamp);
+          const date = new Date(`${Timestamp}T00:00:00`);
           const dayOfWeek = date.toLocaleString("en-us", { weekday: "long" });
           const hour = Time.split(":")[0];
           const key = `${dayOfWeek}-${hour}`;
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         if (Timestamp) {
-          const date = new Date(Timestamp.split(",")[0]);
+          const date = new Date(`${Timestamp.split(",")[0]}T00:00:00`);
           const dayOfWeek = date.getDay();
 
           switch (dayOfWeek) {
