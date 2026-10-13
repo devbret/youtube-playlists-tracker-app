@@ -1,10 +1,19 @@
 import { fillMissingDates } from "./utilities/fillmissingdates.js";
+import { attachTypeahead } from "./utilities/typeahead.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let playlistsArray = [];
   let currentFilter = "";
   let debounceTimer;
   const colorMap = {};
+
+  const uniqueValues = (key) => [
+    ...new Set(playlistsArray.map((playlist) => playlist[key])),
+  ];
+  attachTypeahead(document.getElementById("game"), () => uniqueValues("game"));
+  attachTypeahead(document.getElementById("youtuber"), () =>
+    uniqueValues("youtuber"),
+  );
 
   fetch("/api/playlists")
     .then((response) => response.json())
